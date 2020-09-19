@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get(
+    "/",
+    function () {
+        return view('api');
+    }
+);
+
+Route::get(
+    "/api-resource/{filename}",
+    function ($filename) {
+        $pathToFile = base_path("/vendor/swagger-api/swagger-ui/dist/" . $filename);
+        $headers = [
+            'Content-Type' => \GuzzleHttp\Psr7\mimetype_from_filename($filename)
+        ];
+        return response()->file($pathToFile, $headers);
+    }
+)->name('swagger-resource');
