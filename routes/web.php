@@ -32,3 +32,7 @@ Route::get(
         return response()->file($pathToFile, $headers);
     }
 )->name('swagger-resource');
+
+Route::get('loaderio-bfc236d49ee42f22d4182fc4d0f299a8', function(){
+    return "loaderio-bfc236d49ee42f22d4182fc4d0f299a8";
+});
