@@ -1,0 +1,1078 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "kosolapus@gmail.com",
+      "name" : "Mike",
+      "url" : "http://kosolapus.ddns.net/"
+    },
+    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n",
+    "license" : {
+      "name" : "MIT"
+    },
+    "title" : "Groomer Service",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://192.168.0.17:8080/api/v1"
+  } ],
+  "tags" : [ {
+    "description" : "Если что, тут речь не про клиентов грумеров,\nа про самих грумеров - клиенты этого приложения именно они.\nПриложение клиента может логиниться в сервисе двухфакторной аутентификации.\n",
+    "name" : "Client"
+  }, {
+    "description" : "Управление мастерами - добавление, удаление, редактирование и все такое\n",
+    "name" : "Master"
+  }, {
+    "description" : "Отсюда управляются сами услуги - можно создать новые,\nполучить старые или обновить что-то из услуг.\n",
+    "name" : "Service"
+  }, {
+    "description" : "Возможно, правильнее было бы назвать это \"Booking\". Основной\nраздел для работы с расписанием мастеров\n",
+    "name" : "Order"
+  }, {
+    "description" : "Заведи своих тварей в личный кабинет и получай персональные\nрекомендации по стрижке/глажке\n",
+    "name" : "Pet"
+  }, {
+    "description" : "Управление акциями\n",
+    "name" : "Promotion"
+  }, {
+    "description" : "Работа с пушами. Не уверен, что этому вообще место в апи есть,\nно оставлю, пусть пока будет\n",
+    "name" : "Push"
+  }, {
+    "description" : "Календари труженников когтеточки и ножниц\n",
+    "name" : "WorkingDiapazon"
+  } ],
+  "paths" : {
+    "/client" : {
+      "get" : {
+        "description" : "Возвращает массив из Клиентов при их существовании или пустой\nмассив, если клиентов нет. Требует токен с уровнем прав как\nминимум администратора сервиса\n",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Client"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Возвращает список клиентов массивом\n",
+        "tags" : [ "Client" ]
+      },
+      "post" : {
+        "description" : "Создает нового Клиента. Для работы с этим эндпоинтом\nтребуется доступ как минимум администратора сервиса\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Client"
+              }
+            }
+          },
+          "description" : "Store *Client* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Создает нового клиента\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/client/{client}" : {
+      "delete" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Client" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Client"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Client" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Client",
+        "example" : 1,
+        "in" : "path",
+        "name" : "client",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Client"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/master" : {
+      "get" : {
+        "description" : "Store *Master* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Master" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Master"
+              }
+            }
+          },
+          "description" : "Store *Master* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Master" ]
+      }
+    },
+    "/master/{master}" : {
+      "delete" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Master" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Master"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Master" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Master",
+        "example" : 1,
+        "in" : "path",
+        "name" : "master",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Master"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Master" ]
+      }
+    },
+    "/order" : {
+      "get" : {
+        "description" : "Store *Order* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Store *Order* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Order" ]
+      }
+    },
+    "/order/{order}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Order"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Order",
+        "example" : 1,
+        "in" : "path",
+        "name" : "order",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Order" ]
+      }
+    },
+    "/pet" : {
+      "get" : {
+        "description" : "Store *Pet* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Pet" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Pet"
+              }
+            }
+          },
+          "description" : "Store *Pet* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Pet" ]
+      }
+    },
+    "/pet/{pet}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Pet"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Pet" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Pet"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Pet" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Pet",
+        "example" : 1,
+        "in" : "path",
+        "name" : "pet",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Pet"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Pet" ]
+      }
+    },
+    "/promotion" : {
+      "get" : {
+        "description" : "Store *Promotion* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Promotion" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Promotion"
+              }
+            }
+          },
+          "description" : "Store *Promotion* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Promotion" ]
+      }
+    },
+    "/promotion/{promotion}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Promotion"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Promotion" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Promotion"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Promotion" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Promotion",
+        "example" : 1,
+        "in" : "path",
+        "name" : "promotion",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Promotion"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Promotion" ]
+      }
+    },
+    "/push" : {
+      "get" : {
+        "description" : "Store *Push* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Push" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Push"
+              }
+            }
+          },
+          "description" : "Store *Push* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Push" ]
+      }
+    },
+    "/push/{push}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Push"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Push" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Push"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Push" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Push",
+        "example" : 1,
+        "in" : "path",
+        "name" : "push",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Push"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Push" ]
+      }
+    },
+    "/service" : {
+      "get" : {
+        "description" : "Store *Service* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Service" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Service"
+              }
+            }
+          },
+          "description" : "Store *Service* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Service" ]
+      }
+    },
+    "/service/{service}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Service"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Service" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Service"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Service" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Service",
+        "example" : 1,
+        "in" : "path",
+        "name" : "service",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Service"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "Service" ]
+      }
+    },
+    "/working-diapazon" : {
+      "get" : {
+        "description" : "Store *WorkingDiapazon* entity",
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "WorkingDiapazon" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkingDiapazon"
+              }
+            }
+          },
+          "description" : "Store *WorkingDiapazon* entity",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "WorkingDiapazon" ]
+      }
+    },
+    "/working-diapazon/{working-diapazon}" : {
+      "delete" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkingDiapazon"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "WorkingDiapazon" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WorkingDiapazon"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "WorkingDiapazon" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested WorkingDiapazon",
+        "example" : 1,
+        "in" : "path",
+        "name" : "working-diapazon",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WorkingDiapazon"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        },
+        "summary" : "",
+        "tags" : [ "WorkingDiapazon" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Service" : {
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "name" : {
+            "description" : "Название Услуги",
+            "type" : "string"
+          },
+          "image_upload" : {
+            "description" : "Загружаемое изображение услуги",
+            "format" : "binary",
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "image" : {
+            "description" : "Изображение услуги",
+            "format" : "url",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "text" : {
+            "description" : "Описание услуги",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Client" : {
+        "description" : "Клиент - это пользователь приложения, частный грумер или контора.\nЭто определяется полем *type*, и влиять это может, к примеру,\nна ценник за работу сервиса + возможности по добавлению мастеров\n(для частника ограничение в 1 мастера).\nУ клиента может быть свое настраиваемое приложение, в котором кастомно могут указываться\nнекоторые настройки. Какие? А хрен его знает, народ упоролся и\nрассказывает про формы в админке, а не про типы данных.\nИ я хз, как форматировать поле *settings*, какой оно может быть длины и все такое.\nОднако, определенно у каждого клиента должно быть свое наименование (поле *name*) и какой-то логотип (поле *image*)\n(в крайнем случае, хотя бы просто фотка грумера)\n",
+        "properties" : {
+          "id" : {
+            "description" : "Уникальный идентификатор Клиента",
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "type" : {
+            "description" : "Тип клиента. 0 - частный мастер, 1 - компания",
+            "type" : "boolean"
+          },
+          "name" : {
+            "description" : "Название Клиента",
+            "type" : "string"
+          },
+          "image" : {
+            "description" : "Логотип клиента",
+            "format" : "binary",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "settings" : {
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      },
+      "Pet" : {
+        "description" : "Иногда лохматая, иногда когтистая тварь, чаще всего с лапами, ушами и хвостом.\nКонкретная особь обладает следующими признаками:\n1. Скорость обработки из состояния \"ну мы пришли\" в состояние \"у-ти какой лапочка\"\n2. Позывной\n3. ???\n",
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "average_time_work" : {
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Promotion" : {
+        "description" : "TODO: Осмысленное описание объекта акций\n",
+        "properties" : {
+          "id" : {
+            "description" : "Уникальный идентификатор Акции",
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "title" : {
+            "description" : "Заголовок Акции",
+            "type" : "string"
+          },
+          "text" : {
+            "description" : "Текст Акции, поддерживает разметку",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "Уникальный адрес акции для доступа с сайта",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Order" : {
+        "description" : "Заказ, он же Бронирование - пока не знаю, как лучше назвать.\nРезервирование конкретного диапазона времени из доступных у конкретного мастера.\nЕсли за приложнием закреплена конкретная тварь с лапами, может\nпомочь с выбором времени, требуемого на ее обработку\n",
+        "properties" : {
+          "id" : {
+            "description" : "Уникальный идентификатор Заказа",
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "working_diapazon_start_id" : {
+            "description" : "Ссылка на время начала процедуры",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "working_diapazon_end_id" : {
+            "description" : "Ссылка на время окончания процедуры (ориентировочное)",
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "pet_id" : {
+            "description" : "Идентификатор лохматой твари",
+            "format" : "int64",
+            "nullable" : true,
+            "type" : "integer"
+          },
+          "phone" : {
+            "description" : "Телефон для связи",
+            "type" : "string"
+          },
+          "pet_name" : {
+            "description" : "Если тварь новая, то ее имя вбивается руками, иначе можно подтягивать",
+            "type" : "string"
+          },
+          "owner_name" : {
+            "description" : "Позывной владельца лохматой твари",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Master" : {
+        "description" : "Мастер - это непосредственный исполнитель услуги.\nРазные мастера могут предоставлять одну или несколько услуг из общего списка Клиента\nУ мастера есть расписание.\n",
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "image" : {
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "image_upload" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Push" : {
+        "description" : "TODO: Осмысленное описание объекта Пушей\n",
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "WorkingDiapazon" : {
+        "properties" : {
+          "id" : {
+            "format" : "int64",
+            "minimum" : 1,
+            "nullable" : false,
+            "type" : "integer"
+          },
+          "size" : {
+            "format" : "time",
+            "type" : "string"
+          },
+          "time_start" : {
+            "format" : "datetime",
+            "type" : "string"
+          },
+          "state" : {
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  }
+}
