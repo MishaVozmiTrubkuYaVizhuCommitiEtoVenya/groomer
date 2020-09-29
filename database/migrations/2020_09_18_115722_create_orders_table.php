@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('working_diapazon_start_id')->unsigned();
-            $table->bigInteger('working_diapazon_end_id')->unsigned();
+            $table->bigInteger('working_diapazon_end_id')->unsigned()->nullable();
             $table->bigInteger('pet_id')->unsigned()->nullable();
             $table->string('phone',32)->nullable();
             $table->string('pet_name',128)->nullable();

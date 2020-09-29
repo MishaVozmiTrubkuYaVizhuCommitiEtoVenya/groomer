@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Service\ServiceGetRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePatchRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePostRequest;
 use App\Models\Swagger\v1\Service;
@@ -13,9 +14,18 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ServiceGetRequest $request)
     {
-        $service = Service::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = Service::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $service = $itemQuery->get();
+        } else {
+            $service = Service::limit(25)->get();
+        }
         return response($service, 200);
     }
 

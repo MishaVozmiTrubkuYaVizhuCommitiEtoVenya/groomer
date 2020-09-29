@@ -4,7 +4,7 @@ namespace Database\Factories\Swagger\v1;
 
 use App\Models\Swagger\v1\Client;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class ClientFactory extends Factory
 {
@@ -27,6 +27,8 @@ class ClientFactory extends Factory
             'name' => $this->faker->text,
             'image' => $this->faker->imageUrl(),
             'settings' => json_encode($this->faker->linuxProcessor),
+            'email' => $this->faker->email,
+            'password' => Hash::make('password')
         ];
     }
 }

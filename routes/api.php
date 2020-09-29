@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Route;
 
  */
 Route::get('/client', 'ClientController@index');
+
+Route::post('/client/login', 'ClientController@login');
 /**
  * post clientPost
  * Summary:

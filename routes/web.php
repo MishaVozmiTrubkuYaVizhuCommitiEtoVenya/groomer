@@ -36,3 +36,14 @@ Route::get(
 Route::get('loaderio-bfc236d49ee42f22d4182fc4d0f299a8', function(){
     return "loaderio-bfc236d49ee42f22d4182fc4d0f299a8";
 });
+
+
+Auth::routes();
+
+Route::get('clients', function(){
+    return \App\Models\Swagger\v1\Client::all();
+});
+
+Route::get('masters', function(){
+    return \App\Models\Swagger\v1\Master::all();
+});

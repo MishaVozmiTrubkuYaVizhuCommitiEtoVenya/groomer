@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Promotion\PromotionGetRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPatchRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPostRequest;
 use App\Models\Swagger\v1\Promotion;
@@ -13,9 +14,18 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PromotionGetRequest $request)
     {
-        $promotion = Promotion::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = Promotion::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $promotion = $itemQuery->get();
+        } else {
+            $promotion = Promotion::limit(25)->get();
+        }
         return response($promotion, 200);
     }
 

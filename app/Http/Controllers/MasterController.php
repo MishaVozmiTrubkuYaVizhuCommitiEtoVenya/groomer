@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Master\MasterGetRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPatchRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPostRequest;
 use App\Models\Swagger\v1\Master;
@@ -13,9 +14,19 @@ class MasterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(MasterGetRequest $request)
     {
-        $master = Master::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $masterQuery = Master::query();
+            $masterQuery->limit(request()->limit ?? 25);
+            $masterQuery->skip(request()->offset ?? 0);
+            $master = $masterQuery->get();
+        } else {
+            $master = Master::limit(25)->get();
+        }
+
         return response($master, 200);
     }
 

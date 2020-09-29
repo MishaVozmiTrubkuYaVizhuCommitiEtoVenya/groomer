@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Order\OrderGetRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPatchRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPostRequest;
 use App\Models\Swagger\v1\Order;
@@ -13,9 +14,18 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(OrderGetRequest $request)
     {
-        $order = Order::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = Order::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $order = $itemQuery->get();
+        } else {
+            $order = Order::limit(25)->get();
+        }
         return response($order, 200);
     }
 

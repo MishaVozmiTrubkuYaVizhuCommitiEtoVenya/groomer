@@ -2,21 +2,40 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Client\ClientGetRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPatchRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPostRequest;
 use App\Models\Swagger\v1\Client;
+use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param ClientGetRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ClientGetRequest $request)
     {
-        $client = Client::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $clientQuery = Client::query();
+            $clientQuery->limit(request()->limit ?? 25);
+            $clientQuery->skip(request()->offset ?? 0);
+            $client = $clientQuery->get();
+        } else {
+            $client = Client::limit(25)->get();
+        }
+
         return response($client, 200);
+    }
+
+    public function login(Request $request){
+        $credentials = $request->only(['login', 'password']);
+
+        return response(json_encode($credentials), 200);
     }
 
     /**

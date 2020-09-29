@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Push\PushGetRequest;
 use App\Http\Requests\Swagger\v1\Push\PushPatchRequest;
 use App\Http\Requests\Swagger\v1\Push\PushPostRequest;
 use App\Models\Swagger\v1\Push;
@@ -13,9 +14,18 @@ class PushController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PushGetRequest $request)
     {
-        $push = Push::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = Push::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $push = $itemQuery->get();
+        } else {
+            $push = Push::limit(25)->get();
+        }
         return response($push, 200);
     }
 

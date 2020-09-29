@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Pet\PetGetRequest;
 use App\Http\Requests\Swagger\v1\Pet\PetPatchRequest;
 use App\Http\Requests\Swagger\v1\Pet\PetPostRequest;
 use App\Models\Swagger\v1\Pet;
@@ -13,9 +14,18 @@ class PetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PetGetRequest $request)
     {
-        $pet = Pet::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = Pet::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $pet = $itemQuery->get();
+        } else {
+            $pet = Pet::limit(25)->get();
+        }
         return response($pet, 200);
     }
 

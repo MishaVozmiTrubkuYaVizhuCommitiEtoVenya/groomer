@@ -3,11 +3,25 @@
 namespace App\Models\Swagger\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Master extends Model
+class Master extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
+    use HasApiTokens;
+
     public $timestamps = false;
-    protected $fillable = ["name", "image", "description"];
+    protected $fillable = [
+        "name",
+        "image",
+        "description",
+        'email',
+        'password',
+    ];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonGetRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonPatchRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonPostRequest;
 use App\Models\Swagger\v1\WorkingDiapazon;
@@ -13,9 +14,18 @@ class WorkingDiapazonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(WorkingDiapazonGetRequest $request)
     {
-        $workingDiapazon = WorkingDiapazon::all();
+        $requestParams = $request->only(['limit','offset']);
+
+        if($requestParams){
+            $itemQuery = WorkingDiapazon::query();
+            $itemQuery->limit(request()->limit ?? 25);
+            $itemQuery->skip(request()->offset ?? 0);
+            $workingDiapazon = $itemQuery->get();
+        } else {
+            $workingDiapazon = WorkingDiapazon::limit(25)->get();
+        }
         return response($workingDiapazon, 200);
     }
 

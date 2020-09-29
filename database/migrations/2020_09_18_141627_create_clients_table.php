@@ -19,6 +19,10 @@ class CreateClientsTable extends Migration
             $table->boolean("type");
             $table->string("image");
             $table->json("settings")->nullable();
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
         });
     }
 

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Swagger\v1\Client;
+use App\Models\Swagger\v1\Master;
+
 return [
 
     /*
@@ -14,8 +17,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'clients',
+        'passwords' => 'clients',
     ],
 
     /*
@@ -46,6 +49,16 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'clients' => [
+            'driver' => 'passport',
+            'provider' => 'clients',
+            'hash' => false,
+        ],
+        'masters' => [
+            'driver' => 'passport',
+            'provider' => 'masters',
+            'hash' => false,
+        ],
     ],
 
     /*
@@ -66,9 +79,13 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'clients' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => Client::class,
+        ],
+        'masters' => [
+            'driver' => 'eloquent',
+            'model' => Master::class,
         ],
 
         // 'users' => [

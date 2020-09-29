@@ -4,6 +4,7 @@ namespace Database\Factories\Swagger\v1;
 
 use App\Models\Swagger\v1\Master;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class MasterFactory extends Factory
 {
@@ -25,6 +26,8 @@ class MasterFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->text,
             'image' => $this->faker->imageUrl(),
+            'email' => $this->faker->email,
+            'password' => Hash::make('password')
         ];
     }
 }

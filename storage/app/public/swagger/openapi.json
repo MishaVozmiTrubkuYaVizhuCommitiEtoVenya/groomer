@@ -11,10 +11,10 @@
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.0.0"
+    "version" : "1.0.1"
   },
   "servers" : [ {
-    "url" : "http://84.201.143.103/api/v1"
+    "url" : "http://localhost:8000/api/v1"
   } ],
   "tags" : [ {
     "description" : "Если что, тут речь не про клиентов грумеров,\nа про самих грумеров - клиенты этого приложения именно они.\nПриложение клиента может логиниться в сервисе двухфакторной аутентификации.\n",
@@ -45,6 +45,25 @@
     "/client" : {
       "get" : {
         "description" : "Возвращает массив из Клиентов при их существовании или пустой\nмассив, если клиентов нет. Требует токен с уровнем прав как\nминимум администратора сервиса\n",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "content" : {
@@ -146,9 +165,148 @@
         "tags" : [ "Client" ]
       }
     },
+    "/client/login" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/client/logout" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/client/refresh" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/client/requestEmail" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
     "/master" : {
       "get" : {
         "description" : "Store *Master* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -240,9 +398,178 @@
         "tags" : [ "Master" ]
       }
     },
+    "/master/login" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/master/logout" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/master/refresh" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/master/requestEmail" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
+    "/master/resetPassword" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "admin@gromersalon.com",
+                "password" : "********"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : { }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "Client" ]
+      }
+    },
     "/order" : {
       "get" : {
         "description" : "Store *Order* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -337,6 +664,25 @@
     "/pet" : {
       "get" : {
         "description" : "Store *Pet* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -431,6 +777,25 @@
     "/promotion" : {
       "get" : {
         "description" : "Store *Promotion* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -525,6 +890,25 @@
     "/push" : {
       "get" : {
         "description" : "Store *Push* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -619,6 +1003,25 @@
     "/service" : {
       "get" : {
         "description" : "Store *Service* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -713,6 +1116,25 @@
     "/working-diapazon" : {
       "get" : {
         "description" : "Store *WorkingDiapazon* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "Ok"
@@ -845,6 +1267,12 @@
             "format" : "int64",
             "readOnly" : true,
             "type" : "integer"
+          },
+          "password" : {
+            "description" : "Пароль клиента",
+            "format" : "password",
+            "type" : "string",
+            "writeOnly" : true
           },
           "type" : {
             "description" : "Тип клиента. 0 - частный мастер, 1 - компания",
