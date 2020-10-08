@@ -6,19 +6,21 @@ use App\Http\Requests\Swagger\v1\Pet\PetGetRequest;
 use App\Http\Requests\Swagger\v1\Pet\PetPatchRequest;
 use App\Http\Requests\Swagger\v1\Pet\PetPostRequest;
 use App\Models\Swagger\v1\Pet;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PetController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(PetGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit', 'offset']);
 
-        if($requestParams){
+        if ($requestParams) {
             $itemQuery = Pet::query();
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
@@ -32,8 +34,8 @@ class PetController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(PetPostRequest $request)
     {
@@ -51,8 +53,8 @@ class PetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Swagger\v1\Pet $pet
-     * @return \Illuminate\Http\Response
+     * @param Pet $pet
+     * @return Response
      */
     public function show(Pet $pet)
     {
@@ -62,9 +64,9 @@ class PetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Swagger\v1\Pet $pet
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Pet $pet
+     * @return Response
      */
     public function update(PetPatchRequest $request, Pet $pet)
     {
@@ -83,8 +85,8 @@ class PetController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Swagger\v1\Pet $pet
-     * @return \Illuminate\Http\Response
+     * @param Pet $pet
+     * @return Response
      */
     public function destroy(Pet $pet)
     {

@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Promotion extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
     protected $fillable = ["title", "text", "url", "image"];
+
+    public function client()
+    {
+        return $this->belongsTo('\App\Models\Swagger\V1\Client');
+    }
 }

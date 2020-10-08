@@ -13,7 +13,7 @@ class PromotionDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->guard('clients')->user();
     }
 
     /**

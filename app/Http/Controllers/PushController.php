@@ -6,19 +6,21 @@ use App\Http\Requests\Swagger\v1\Push\PushGetRequest;
 use App\Http\Requests\Swagger\v1\Push\PushPatchRequest;
 use App\Http\Requests\Swagger\v1\Push\PushPostRequest;
 use App\Models\Swagger\v1\Push;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PushController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(PushGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit', 'offset']);
 
-        if($requestParams){
+        if ($requestParams) {
             $itemQuery = Push::query();
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
@@ -32,8 +34,8 @@ class PushController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(PushPostRequest $request)
     {
@@ -53,8 +55,8 @@ class PushController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Swagger\v1\Push $push
-     * @return \Illuminate\Http\Response
+     * @param Push $push
+     * @return Response
      */
     public function show(Push $push)
     {
@@ -64,9 +66,9 @@ class PushController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Swagger\v1\Push $push
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Push $push
+     * @return Response
      */
     public function update(PushPatchRequest $request, Push $push)
     {
@@ -87,8 +89,8 @@ class PushController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Swagger\v1\Push $push
-     * @return \Illuminate\Http\Response
+     * @param Push $push
+     * @return Response
      */
     public function destroy(Push $push)
     {

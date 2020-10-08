@@ -4,10 +4,24 @@ namespace App\Models\Swagger\v1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Order extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
-    protected $fillable = ["working_diapazon_start_id", "working_diapazon_end_id", "pet_id", "phone", "pet_name", "owner_name"];
+
+    protected $fillable = [
+        "working_diapason_start_id",
+        "working_diapason_end_id",
+        "pet_id",
+        "phone",
+        "pet_name",
+        "owner_name"
+    ];
+
+    public function services() : Relation {
+        return $this->hasMany('\App\Models\Swagger\V1\Service');
+    }
 }

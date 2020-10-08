@@ -25,6 +25,7 @@ class MasterFactory extends Factory
         return [
             'name' => $this->faker->name,
             'description' => $this->faker->text,
+            'client_id' => $this->faker->numberBetween(1,50),
             'image' => $this->faker->imageUrl(),
             'email' => $this->faker->email,
             'password' => Hash::make('password')

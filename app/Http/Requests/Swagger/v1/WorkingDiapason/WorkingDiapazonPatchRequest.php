@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Swagger\v1\Store;
+namespace App\Http\Requests\Swagger\v1\WorkingDiapason;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreDeleteRequest extends FormRequest
+class WorkingDiapasonPatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->guard('masters')->user();
     }
 
     /**

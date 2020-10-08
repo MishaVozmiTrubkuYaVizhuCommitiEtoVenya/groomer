@@ -8,7 +8,7 @@ use App\Models\Swagger\v1\Order;
 use App\Models\Swagger\v1\Pet;
 use App\Models\Swagger\v1\Promotion;
 use App\Models\Swagger\v1\Service;
-use App\Models\Swagger\v1\WorkingDiapazon;
+use App\Models\Swagger\v1\WorkingDiapason;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         Pet::factory(50)->create();
         Promotion::factory(50)->create();
         Service::factory(50)->create();
-        WorkingDiapazon::factory(50)->create();
+        WorkingDiapason::factory(50)->create();
+
+        //OAuthSeeder::run();
     }
 }

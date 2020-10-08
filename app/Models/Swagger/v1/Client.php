@@ -26,4 +26,16 @@ class Client extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function masters(){
+        return $this->hasMany('\App\Model\Swagger\V1\Master');
+    }
+
+    public function promotions(){
+        return $this->hasMany('\App\Model\Swagger\V1\Promotion');
+    }
+
+    public function services(){
+        return $this->hasMany('\App\Model\Swagger\V1\Service');
+    }
 }

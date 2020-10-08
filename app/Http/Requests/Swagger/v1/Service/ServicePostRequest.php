@@ -13,7 +13,7 @@ class ServicePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->guard('clients')->user();
     }
 
     /**
@@ -24,7 +24,10 @@ class ServicePostRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "name" => "string",
+            "image_upload" => "string",
+            "text" => "string",
+            'client_id' => "string"
         ];
     }
 }

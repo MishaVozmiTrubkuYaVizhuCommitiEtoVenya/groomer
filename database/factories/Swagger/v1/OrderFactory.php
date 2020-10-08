@@ -23,8 +23,8 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'working_diapazon_start_id' => $this->faker->randomDigitNotNull,
-            'working_diapazon_end_id' => $this->faker->randomDigitNotNull,
+            'working_diapason_start_id' => $this->faker->randomDigitNotNull,
+            'working_diapason_end_id' => $this->faker->randomDigitNotNull,
             'pet_id' => $this->faker->randomDigitNotNull,
             'phone' => $this->faker->phoneNumber,
             'pet_name' => $this->faker->name,

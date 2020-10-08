@@ -21,27 +21,90 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::post(
+    '/oauth/client/login',
+    function (Request $request) {
+        $params = array(
+            "client_id" => env('PASSPORT_CLIENT_ID'),
+            "client_secret" => env('PASSPORT_CLIENT_SECRET'),
+            "username" => $request->login,
+            "password" => $request->password,
+            "grant_type" => "password",
+        );
+
+        try {
+            $client = new \GuzzleHttp\Client(
+                [
+                    // Base URI is used with relative requests
+                    'base_uri' => 'http://kosolapus.ddns.net/',
+                    // You can set any number of default request options.
+                    'timeout' => 2.0,
+                ]
+            );
+            $response = $client->request(
+                'POST',
+                '/oauth/token',
+                [
+                    'form_params' => $params
+                ]
+            );
+        } catch (\Exception $e) {
+
+        }
+
+
+        return response($response->getBody() ?? "", $response->getStatusCode() ?? 422);
+    }
+);
+
+Route::post(
+    '/oauth/master/login',
+    function (Request $request) {
+        $params = array(
+            "client_id" => env('PASSPORT_MASTER_ID'),
+            "client_secret" => env('PASSPORT_MASTER_SECRET'),
+            "username" => $request->login,
+            "password" => $request->password,
+            "grant_type" => "password",
+        );
+        $client = new \GuzzleHttp\Client(
+            [
+                // Base URI is used with relative requests
+                'base_uri' => 'http://kosolapus.ddns.net/',
+                // You can set any number of default request options.
+                'timeout' => 2.0,
+            ]
+        );
+        $response = $client->request(
+            'POST',
+            '/oauth/token',
+            [
+                'form_params' => $params
+            ]
+        );
+
+        return response($response->getBody(), $response->getStatusCode());
+    }
+);
+
 /**
  * get clientGet
  * Summary:
  * Notes: Store *Client* entity
-
  */
 Route::get('/client', 'ClientController@index');
 
-Route::post('/client/login', 'ClientController@login');
+
 /**
  * post clientPost
  * Summary:
  * Notes:
-
  */
 Route::post('/client', 'ClientController@store');
 /**
  * delete clientClientDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/client/{client}', 'ClientController@destroy');
 /**
@@ -55,28 +118,24 @@ Route::get('/client/{client}', 'ClientController@show');
  * patch clientClientPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/client/{client}', 'ClientController@update');
 /**
  * get masterGet
  * Summary:
  * Notes: Store *Master* entity
-
  */
 Route::get('/master', 'MasterController@index');
 /**
  * post masterPost
  * Summary:
  * Notes:
-
  */
 Route::post('/master', 'MasterController@store');
 /**
  * delete masterMasterDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/master/{master}', 'MasterController@destroy');
 /**
@@ -90,28 +149,24 @@ Route::get('/master/{master}', 'MasterController@show');
  * patch masterMasterPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/master/{master}', 'MasterController@update');
 /**
  * get orderGet
  * Summary:
  * Notes: Store *Order* entity
-
  */
 Route::get('/order', 'OrderController@index');
 /**
  * post orderPost
  * Summary:
  * Notes:
-
  */
 Route::post('/order', 'OrderController@store');
 /**
  * delete orderOrderDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/order/{order}', 'OrderController@destroy');
 /**
@@ -125,28 +180,24 @@ Route::get('/order/{order}', 'OrderController@show');
  * patch orderOrderPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/order/{order}', 'OrderController@update');
 /**
  * get petGet
  * Summary:
  * Notes: Store *Pet* entity
-
  */
 Route::get('/pet', 'PetController@index');
 /**
  * post petPost
  * Summary:
  * Notes:
-
  */
 Route::post('/pet', 'PetController@store');
 /**
  * delete petPetDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/pet/{pet}', 'PetController@destroy');
 /**
@@ -160,28 +211,24 @@ Route::get('/pet/{pet}', 'PetController@show');
  * patch petPetPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/pet/{pet}', 'PetController@update');
 /**
  * get promotionGet
  * Summary:
  * Notes: Store *Promotion* entity
-
  */
 Route::get('/promotion', 'PromotionController@index');
 /**
  * post promotionPost
  * Summary:
  * Notes:
-
  */
 Route::post('/promotion', 'PromotionController@store');
 /**
  * delete promotionPromotionDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/promotion/{promotion}', 'PromotionController@destroy');
 /**
@@ -195,28 +242,24 @@ Route::get('/promotion/{promotion}', 'PromotionController@show');
  * patch promotionPromotionPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/promotion/{promotion}', 'PromotionController@update');
 /**
  * get pushGet
  * Summary:
  * Notes: Store *Push* entity
-
  */
 Route::get('/push', 'PushController@index');
 /**
  * post pushPost
  * Summary:
  * Notes:
-
  */
 Route::post('/push', 'PushController@store');
 /**
  * delete pushPushDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/push/{push}', 'PushController@destroy');
 /**
@@ -230,28 +273,24 @@ Route::get('/push/{push}', 'PushController@show');
  * patch pushPushPatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/push/{push}', 'PushController@update');
 /**
  * get serviceGet
  * Summary:
  * Notes: Store *Service* entity
-
  */
 Route::get('/service', 'ServiceController@index');
 /**
  * post servicePost
  * Summary:
  * Notes:
-
  */
 Route::post('/service', 'ServiceController@store');
 /**
  * delete serviceServiceDelete
  * Summary:
  * Notes:
-
  */
 Route::delete('/service/{service}', 'ServiceController@destroy');
 /**
@@ -265,45 +304,43 @@ Route::get('/service/{service}', 'ServiceController@show');
  * patch serviceServicePatch
  * Summary:
  * Notes:
-
  */
 Route::patch('/service/{service}', 'ServiceController@update');
 /**
- * get workingDiapazonGet
+ * get workingDiapasonGet
  * Summary:
- * Notes: Store *WorkingDiapazon* entity
-
+ * Notes: Store *WorkingDiapason* entity
  */
-Route::get('/working-diapazon', 'WorkingDiapazonController@index');
+Route::get('/working-diapason', 'WorkingDiapasonController@index');
 /**
- * post workingDiapazonPost
- * Summary:
- * Notes:
-
- */
-Route::post('/working-diapazon', 'WorkingDiapazonController@store');
-/**
- * delete workingDiapazonWorkingDiapazonDelete
+ * post workingDiapasonPost
  * Summary:
  * Notes:
-
  */
-Route::delete('/working-diapazon/{working-diapazon}', 'WorkingDiapazonController@destroy');
+Route::post('/working-diapason', 'WorkingDiapasonController@store');
 /**
- * get workingDiapazonWorkingDiapazonGet
+ * delete workingDiapasonWorkingDiapasonDelete
+ * Summary:
+ * Notes:
+ */
+Route::delete('/working-diapason/{working-diapason}', 'WorkingDiapasonController@destroy');
+/**
+ * get workingDiapasonWorkingDiapasonGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/working-diapazon/{working-diapazon}', 'WorkingDiapazonController@show');
+Route::get('/working-diapason/{working-diapason}', 'WorkingDiapasonController@show');
 /**
- * patch workingDiapazonWorkingDiapazonPatch
+ * patch workingDiapasonWorkingDiapasonPatch
  * Summary:
  * Notes:
-
  */
-Route::patch('/working-diapazon/{working-diapazon}', 'WorkingDiapazonController@update');
+Route::patch('/working-diapason/{working-diapason}', 'WorkingDiapasonController@update');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:api')->get(
+    '/user',
+    function (Request $request) {
+        return $request->user();
+    }
+);

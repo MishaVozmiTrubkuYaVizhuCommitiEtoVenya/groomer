@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scripts
+data:
+  git-clone.sh: |
+    #!/bin/sh -e
+    REPO=$1
+    DIR=$2
+    # Init Containers will re-run on Pod restart. Remove the directory's contents
+    # and reprovision when this happens.
+    if [ -d "$DIR" ]; then
+        rm -rf $( find $DIR -mindepth 1 )
+    fi
+    git clone $REPO $DIR
+
+  composer.sh: |
+    #!/bin/sh -e
+
+    cd /code
+    composer install
+
+  post_install.sh: |
+    #!/bin/sh -e
+
+    cd /code
+    cp .env.example .env
+    php artisan key:generate
+    chown -R 33:33 /code
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  labels:
+    tier: backend
+data:
+  opcache : |
+    opcache.enable=1
+    opcache.memory_consumption=128
+    opcache.max_accelerated_files=10000
+    opcache.revalidate_freq=0
+    opcache.validate_timestamps=0
+  php: |
+    ; See https://www.php.net/manual/en/install.fpm.configuration.php for all available configuration options
+
+    ; Required user, group, and port options
+    [www]
+    user = www-data
+    group = www-data
+    listen = 127.0.0.1:9000
+
+    ; Process manager options
+    pm = dynamic
+    pm.max_children = 5
+    pm.start_servers = 2
+    pm.min_spare_servers = 1
+    pm.max_spare_servers = 2
+    pm.max_requests = 100000
+    pm.process_idle_timeout=5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: php
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 9000
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: php-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 500M
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/code"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: php-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500M
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: backend
+    spec:
+      volumes:
+        - name: code
+          persistentVolumeClaim:
+            claimName: php-pv-claim
+        - name: opcache
+          configMap:
+            name: config
+            items:
+              - key: opcache
+                path: opcache.ini
+        - name: php-config
+          configMap:
+            name: config
+            items:
+              - key: php
+                path: site.conf
+        - name: scripts
+          configMap:
+            name: scripts
+            defaultMode: 0755
+      containers:
+        - name: php
+          image: library/php:7.4-fpm
+          volumeMounts:
+            - name: code
+              mountPath: /code
+            - name: php-config
+              mountPath: /usr/local/etc/php-fpm.d/site.conf
+            - name: opcache
+              mountPath: /usr/local/etc/php/conf.d/opcache.conf
+      initContainers:
+        - name: install
+          image: alpine/git:latest
+          volumeMounts:
+            - name: code
+              mountPath: /code
+            - name: scripts
+              mountPath: /usr/local/git
+          command:
+            - /usr/local/git/git-clone.sh
+          args:
+              - "https://github.com/kosolapus/groomer.git"
+              - "/code"
+
+        - name: composer
+          image: library/composer:latest
+          volumeMounts:
+              - name: code
+                mountPath: /code
+              - name: scripts
+                mountPath: /usr/local/git
+          command:
+              - /usr/local/git/composer.sh
+
+        - name: postinstall
+          image: library/php:7.4-alpine
+          volumeMounts:
+              - name: code
+                mountPath: /code
+              - name: scripts
+                mountPath: /usr/local/git
+          command:
+              - /usr/local/git/post_install.sh

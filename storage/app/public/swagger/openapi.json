@@ -11,12 +11,14 @@
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.0.1"
+    "version" : "1.0.2"
   },
   "servers" : [ {
-    "url" : "http://localhost:8000/api/v1"
+    "url" : "http://kosolapus.ddns.net/api/v1"
   } ],
   "tags" : [ {
+    "name" : "OAuth"
+  }, {
     "description" : "Если что, тут речь не про клиентов грумеров,\nа про самих грумеров - клиенты этого приложения именно они.\nПриложение клиента может логиниться в сервисе двухфакторной аутентификации.\n",
     "name" : "Client"
   }, {
@@ -29,9 +31,6 @@
     "description" : "Возможно, правильнее было бы назвать это \"Booking\". Основной\nраздел для работы с расписанием мастеров\n",
     "name" : "Order"
   }, {
-    "description" : "Заведи своих тварей в личный кабинет и получай персональные\nрекомендации по стрижке/глажке\n",
-    "name" : "Pet"
-  }, {
     "description" : "Управление акциями\n",
     "name" : "Promotion"
   }, {
@@ -39,9 +38,77 @@
     "name" : "Push"
   }, {
     "description" : "Календари труженников когтеточки и ножниц\n",
-    "name" : "WorkingDiapazon"
+    "name" : "WorkingDiapason"
   } ],
   "paths" : {
+    "/oauth/client/login" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации клиента\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "benjamin93@hotmail.com",
+                "password" : "password"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Bearer"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "OAuth" ]
+      }
+    },
+    "/oauth/master/login" : {
+      "post" : {
+        "description" : "Эндпоинт для авторизации Мастера\n",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "login" : "libbie15@hotmail.com",
+                "password" : "password"
+              },
+              "schema" : {
+                "type" : "object"
+              }
+            }
+          },
+          "description" : "Аутентифицирует клиента - салон или частного грумера",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Bearer"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
+        "tags" : [ "OAuth" ]
+      }
+    },
     "/client" : {
       "get" : {
         "description" : "Возвращает массив из Клиентов при их существовании или пустой\nмассив, если клиентов нет. Требует токен с уровнем прав как\nминимум администратора сервиса\n",
@@ -79,6 +146,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuthAdmin" : [ ]
+        } ],
         "summary" : "Возвращает список клиентов массивом\n",
         "tags" : [ "Client" ]
       },
@@ -100,6 +170,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuthAdmin" : [ ]
+        } ],
         "summary" : "Создает нового клиента\n",
         "tags" : [ "Client" ]
       }
@@ -112,6 +185,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuthAdmin" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Client" ]
       },
@@ -161,127 +237,10 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuthAdmin" : [ ]
+        } ],
         "summary" : "",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/client/login" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/client/logout" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/client/refresh" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/client/requestEmail" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
         "tags" : [ "Client" ]
       }
     },
@@ -306,6 +265,14 @@
             "default" : 0,
             "type" : "integer"
           }
+        }, {
+          "description" : "Id клиента, которому принадлежит мастер",
+          "in" : "query",
+          "name" : "client_id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -319,9 +286,28 @@
         "description" : "",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Master"
+                "allOf" : [ {
+                  "properties" : {
+                    "image_upload" : {
+                      "format" : "binary",
+                      "nullable" : false,
+                      "type" : "string"
+                    },
+                    "name" : {
+                      "nullable" : false,
+                      "type" : "string"
+                    },
+                    "description" : {
+                      "format" : "text",
+                      "nullable" : true,
+                      "type" : "string"
+                    }
+                  },
+                  "required" : [ "description", "image_upload", "name" ],
+                  "type" : "object"
+                } ]
               }
             }
           },
@@ -329,10 +315,39 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Ok"
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Master"
+                }
+              }
+            },
+            "description" : "Успешно создано"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Master" ]
       }
@@ -345,6 +360,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Master" ]
       },
@@ -380,7 +398,7 @@
         "description" : "",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
                 "$ref" : "#/components/schemas/Master"
               }
@@ -394,158 +412,11 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Master" ]
-      }
-    },
-    "/master/login" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/master/logout" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/master/refresh" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/master/requestEmail" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
-      }
-    },
-    "/master/resetPassword" : {
-      "post" : {
-        "description" : "Эндпоинт для авторизации клиента\n",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "example" : {
-                "login" : "admin@gromersalon.com",
-                "password" : "********"
-              },
-              "schema" : {
-                "type" : "object"
-              }
-            }
-          },
-          "description" : "Аутентифицирует клиента - салон или частного грумера",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : { }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
-        "tags" : [ "Client" ]
       }
     },
     "/order" : {
@@ -575,6 +446,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Order" ]
       },
@@ -608,6 +482,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Order" ]
       },
@@ -625,6 +502,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Order" ]
       },
@@ -657,121 +537,11 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Order" ]
-      }
-    },
-    "/pet" : {
-      "get" : {
-        "description" : "Store *Pet* entity",
-        "parameters" : [ {
-          "description" : "Как много элементов должно возвращаться за один запрос",
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 25,
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Смещение от первого",
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Pet" ]
-      },
-      "post" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Pet"
-              }
-            }
-          },
-          "description" : "Store *Pet* entity",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Pet" ]
-      }
-    },
-    "/pet/{pet}" : {
-      "delete" : {
-        "description" : "",
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Pet" ]
-      },
-      "get" : {
-        "description" : "",
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Pet"
-                }
-              }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Pet" ]
-      },
-      "parameters" : [ {
-        "description" : "Id requested Pet",
-        "example" : 1,
-        "in" : "path",
-        "name" : "pet",
-        "required" : true,
-        "schema" : {
-          "minimum" : 1,
-          "type" : "integer"
-        }
-      } ],
-      "patch" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Pet"
-              }
-            }
-          },
-          "description" : "Optional description in *Markdown*",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Pet" ]
       }
     },
     "/promotion" : {
@@ -793,6 +563,14 @@
           "required" : false,
           "schema" : {
             "default" : 0,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Id клиента, которому принадлежит мастер",
+          "in" : "query",
+          "name" : "client_id",
+          "required" : true,
+          "schema" : {
             "type" : "integer"
           }
         } ],
@@ -822,6 +600,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Promotion" ]
       }
@@ -834,6 +615,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Promotion" ]
       },
@@ -883,6 +667,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Promotion" ]
       }
@@ -1021,6 +808,14 @@
             "default" : 0,
             "type" : "integer"
           }
+        }, {
+          "description" : "Id клиента, которому принадлежит мастер",
+          "in" : "query",
+          "name" : "client_id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1033,10 +828,33 @@
       "post" : {
         "description" : "",
         "requestBody" : {
+          "$ref" : "#/components/requestBodies/inline_object",
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
-                "$ref" : "#/components/schemas/Service"
+                "properties" : {
+                  "name" : {
+                    "description" : "Название Услуги",
+                    "type" : "string"
+                  },
+                  "image_upload" : {
+                    "description" : "Загружаемое изображение услуги",
+                    "format" : "binary",
+                    "type" : "string",
+                    "writeOnly" : true
+                  },
+                  "service_type" : {
+                    "description" : "Тип услуги - для кошек, для собак, для других",
+                    "items" : {
+                      "enum" : [ 0, 1, 2 ],
+                      "format" : "tinyint",
+                      "type" : "integer"
+                    },
+                    "type" : "array"
+                  }
+                },
+                "required" : [ "image_upload", "name", "service_type" ],
+                "type" : "object"
               }
             }
           },
@@ -1048,6 +866,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Service" ]
       }
@@ -1060,6 +881,9 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Service" ]
       },
@@ -1109,13 +933,16 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "summary" : "",
         "tags" : [ "Service" ]
       }
     },
-    "/working-diapazon" : {
+    "/working-diapason" : {
       "get" : {
-        "description" : "Store *WorkingDiapazon* entity",
+        "description" : "Store *WorkingDiapason* entity",
         "parameters" : [ {
           "description" : "Как много элементов должно возвращаться за один запрос",
           "in" : "query",
@@ -1134,6 +961,14 @@
             "default" : 0,
             "type" : "integer"
           }
+        }, {
+          "description" : "Id мастера",
+          "in" : "query",
+          "name" : "master_id",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1141,7 +976,7 @@
           }
         },
         "summary" : "",
-        "tags" : [ "WorkingDiapazon" ]
+        "tags" : [ "WorkingDiapason" ]
       },
       "post" : {
         "description" : "",
@@ -1149,11 +984,11 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/WorkingDiapazon"
+                "$ref" : "#/components/schemas/WorkingDiapason"
               }
             }
           },
-          "description" : "Store *WorkingDiapazon* entity",
+          "description" : "Store *WorkingDiapason* entity",
           "required" : true
         },
         "responses" : {
@@ -1161,20 +996,46 @@
             "description" : "Ok"
           }
         },
+        "security" : [ {
+          "bearerAuthMaster" : [ ]
+        } ],
         "summary" : "",
-        "tags" : [ "WorkingDiapazon" ]
+        "tags" : [ "WorkingDiapason" ]
       }
     },
-    "/working-diapazon/{working-diapazon}" : {
+    "/working-diapason/{working-diapason}" : {
       "delete" : {
         "description" : "",
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
           }
         },
+        "security" : [ {
+          "bearerAuthMaster" : [ ]
+        } ],
         "summary" : "",
-        "tags" : [ "WorkingDiapazon" ]
+        "tags" : [ "WorkingDiapason" ]
       },
       "get" : {
         "description" : "",
@@ -1183,21 +1044,41 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/WorkingDiapazon"
+                  "$ref" : "#/components/schemas/WorkingDiapason"
                 }
               }
             },
             "description" : "Ok"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
           }
         },
         "summary" : "",
-        "tags" : [ "WorkingDiapazon" ]
+        "tags" : [ "WorkingDiapason" ]
       },
       "parameters" : [ {
-        "description" : "Id requested WorkingDiapazon",
+        "description" : "Id requested WorkingDiapason",
         "example" : 1,
         "in" : "path",
-        "name" : "working-diapazon",
+        "name" : "working-diapason",
         "required" : true,
         "schema" : {
           "minimum" : 1,
@@ -1210,7 +1091,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/WorkingDiapazon"
+                "$ref" : "#/components/schemas/WorkingDiapason"
               }
             }
           },
@@ -1220,14 +1101,49 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Ошибка"
           }
         },
+        "security" : [ {
+          "bearerAuthMaster" : [ ]
+        } ],
         "summary" : "",
-        "tags" : [ "WorkingDiapazon" ]
+        "tags" : [ "WorkingDiapason" ]
       }
     }
   },
   "components" : {
+    "requestBodies" : {
+      "inline_object" : {
+        "content" : {
+          "multipart/form-data" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/inline_object"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
     "schemas" : {
       "Service" : {
         "properties" : {
@@ -1246,17 +1162,32 @@
             "type" : "string",
             "writeOnly" : true
           },
+          "service_type" : {
+            "items" : {
+              "description" : "Тип услуги - для кошек, для собак, для других",
+              "enum" : [ 0, 1, 2 ],
+              "format" : "tinyint",
+              "type" : "integer"
+            },
+            "type" : "array"
+          },
           "image" : {
             "description" : "Изображение услуги",
             "format" : "url",
             "readOnly" : true,
             "type" : "string"
           },
+          "price" : {
+            "description" : "Цена на услугу",
+            "format" : "int64",
+            "type" : "integer"
+          },
           "text" : {
             "description" : "Описание услуги",
             "type" : "string"
           }
         },
+        "required" : [ "image_upload", "name", "service_type" ],
         "type" : "object"
       },
       "Client" : {
@@ -1329,6 +1260,11 @@
             "description" : "Текст Акции, поддерживает разметку",
             "type" : "string"
           },
+          "date_start" : {
+            "description" : "Дата начала акции",
+            "format" : "datetime",
+            "type" : "string"
+          },
           "url" : {
             "description" : "Уникальный адрес акции для доступа с сайта",
             "type" : "string"
@@ -1345,32 +1281,31 @@
             "readOnly" : true,
             "type" : "integer"
           },
-          "working_diapazon_start_id" : {
+          "working_diapason_start_id" : {
             "description" : "Ссылка на время начала процедуры",
             "format" : "int64",
-            "type" : "integer"
-          },
-          "working_diapazon_end_id" : {
-            "description" : "Ссылка на время окончания процедуры (ориентировочное)",
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "pet_id" : {
-            "description" : "Идентификатор лохматой твари",
-            "format" : "int64",
-            "nullable" : true,
             "type" : "integer"
           },
           "phone" : {
             "description" : "Телефон для связи",
             "type" : "string"
           },
+          "email" : {
+            "description" : "Email для связи",
+            "nullable" : true,
+            "type" : "string"
+          },
           "pet_name" : {
-            "description" : "Если тварь новая, то ее имя вбивается руками, иначе можно подтягивать",
+            "description" : "Имя питомца",
             "type" : "string"
           },
           "owner_name" : {
             "description" : "Позывной владельца лохматой твари",
+            "type" : "string"
+          },
+          "comment" : {
+            "description" : "Поле комментария в форме заказа",
+            "nullable" : true,
             "type" : "string"
           }
         },
@@ -1385,14 +1320,17 @@
             "type" : "integer"
           },
           "image" : {
+            "format" : "url",
             "readOnly" : true,
             "type" : "string"
           },
           "image_upload" : {
+            "format" : "binary",
             "type" : "string",
             "writeOnly" : true
           },
           "name" : {
+            "nullable" : false,
             "type" : "string"
           },
           "description" : {
@@ -1413,7 +1351,7 @@
         },
         "type" : "object"
       },
-      "WorkingDiapazon" : {
+      "WorkingDiapason" : {
         "properties" : {
           "id" : {
             "format" : "int64",
@@ -1434,6 +1372,84 @@
           }
         },
         "type" : "object"
+      },
+      "Bearer" : {
+        "description" : "Авторизационные токены.\n",
+        "properties" : {
+          "token_type" : {
+            "description" : "Уникальный идентификатор Клиента",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "access_token" : {
+            "description" : "Уникальный идентификатор Клиента",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "refresh_token" : {
+            "description" : "Уникальный идентификатор Клиента",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "expires_in" : {
+            "description" : "Уникальный идентификатор Клиента",
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_response_422" : {
+        "description" : "Сообщение об ошибке",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_object" : {
+        "properties" : {
+          "name" : {
+            "description" : "Название Услуги",
+            "type" : "string"
+          },
+          "image_upload" : {
+            "description" : "Загружаемое изображение услуги",
+            "format" : "binary",
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "service_type" : {
+            "description" : "Тип услуги - для кошек, для собак, для других",
+            "items" : {
+              "enum" : [ 0, 1, 2 ],
+              "format" : "tinyint",
+              "type" : "integer"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "image_upload", "name", "service_type" ],
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      },
+      "bearerAuthMaster" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      },
+      "bearerAuthAdmin" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
       }
     }
   }

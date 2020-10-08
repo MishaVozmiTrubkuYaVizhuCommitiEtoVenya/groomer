@@ -2,18 +2,18 @@
 
 namespace Database\Factories\Swagger\v1;
 
-use App\Models\Swagger\v1\WorkingDiapazon;
+use App\Models\Swagger\v1\WorkingDiapason;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class WorkingDiapazonFactory extends Factory
+class WorkingDiapasonFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = WorkingDiapazon::class;
+    protected $model = WorkingDiapason::class;
 
     /**
      * Define the model's default state.
@@ -24,6 +24,7 @@ class WorkingDiapazonFactory extends Factory
     {
         return [
             'size' => $this->faker->randomDigitNotNull,
+            'master_id' => $this->faker->numberBetween(1,50),
             'time_start' => $this->faker->dateTime,
             'state' => $this->faker->boolean(),
         ];

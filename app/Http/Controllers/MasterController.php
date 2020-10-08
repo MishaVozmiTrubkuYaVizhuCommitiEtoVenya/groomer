@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\Master\MasterGetRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPatchRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPostRequest;
 use App\Models\Swagger\v1\Master;
+use App\Services\MasterService;
 
 class MasterController extends Controller
 {
@@ -14,20 +15,10 @@ class MasterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(MasterGetRequest $request)
+    public function index(MasterGetRequest $request): \Illuminate\Http\Response
     {
-        $requestParams = $request->only(['limit','offset']);
-
-        if($requestParams){
-            $masterQuery = Master::query();
-            $masterQuery->limit(request()->limit ?? 25);
-            $masterQuery->skip(request()->offset ?? 0);
-            $master = $masterQuery->get();
-        } else {
-            $master = Master::limit(25)->get();
-        }
-
-        return response($master, 200);
+        $returnData = MasterService::getItemsList($request);
+        return response($returnData->jsonContent, $returnData->statusCode);
     }
 
     /**
@@ -36,17 +27,10 @@ class MasterController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MasterPostRequest $request)
+    public function store(MasterPostRequest $request): \Illuminate\Http\Response
     {
-        $master = Master::create(
-            $request->only(
-                [
-                    "image",
-                    "name",
-                    "description"
-                ]
-            )
-        );
+        $masterData = MasterService::createDataFromRequest($request);
+        $master = Master::create($masterData);
         return response($master, 201);
     }
 
@@ -56,9 +40,10 @@ class MasterController extends Controller
      * @param \App\Models\Swagger\v1\Master $master
      * @return \Illuminate\Http\Response
      */
-    public function show(Master $master)
+    public function show(Master $master): \Illuminate\Http\Response
     {
-        return response($master, 200);
+        $masterData = MasterService::getItem($master);
+        return response($masterData->jsonContent, $masterData->statusCode);
     }
 
     /**
@@ -75,7 +60,8 @@ class MasterController extends Controller
                 [
                     "image",
                     "name",
-                    "description"
+                    "description",
+
                 ]
             )
         );

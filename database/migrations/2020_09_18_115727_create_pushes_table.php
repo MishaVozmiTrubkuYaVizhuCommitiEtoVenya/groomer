@@ -15,6 +15,7 @@ class CreatePushesTable extends Migration
     {
         Schema::create('pushes', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('client_id')->unsigned();
             $table->timestamps();
         });
     }

@@ -15,7 +15,10 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('client_id')->unsigned();
             $table->string('image');
+            $table->unsignedTinyInteger('type');
+            $table->unsignedInteger('price');
             $table->string('name');
             $table->string('text');
         });

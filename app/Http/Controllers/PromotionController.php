@@ -16,16 +16,14 @@ class PromotionController extends Controller
      */
     public function index(PromotionGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit','offset','client_id']);
 
-        if($requestParams){
-            $itemQuery = Promotion::query();
-            $itemQuery->limit(request()->limit ?? 25);
-            $itemQuery->skip(request()->offset ?? 0);
-            $promotion = $itemQuery->get();
-        } else {
-            $promotion = Promotion::limit(25)->get();
-        }
+        $itemQuery = Promotion::query();
+        $itemQuery->where('client_id', $requestParams['client_id']);
+        $itemQuery->limit($requestParams['limit'] ?? 25);
+        $itemQuery->skip($requestParams['offset'] ?? 0);
+        $promotion = $itemQuery->get();
+
         return response($promotion, 200);
     }
 
@@ -43,7 +41,7 @@ class PromotionController extends Controller
                     "title",
                     "text",
                     "image",
-                    "url",
+                    "url", 'client_id'
                 ]
             )
         );
@@ -76,7 +74,7 @@ class PromotionController extends Controller
                     "title",
                     "text",
                     "image",
-                    "url",
+                    "url", 'client_id'
                 ]
             )
         );

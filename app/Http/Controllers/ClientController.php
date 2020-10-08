@@ -7,6 +7,7 @@ use App\Http\Requests\Swagger\v1\Client\ClientPatchRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPostRequest;
 use App\Models\Swagger\v1\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ClientController extends Controller
 {
@@ -14,13 +15,13 @@ class ClientController extends Controller
      * Display a listing of the resource.
      *
      * @param ClientGetRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(ClientGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit', 'offset']);
 
-        if($requestParams){
+        if ($requestParams) {
             $clientQuery = Client::query();
             $clientQuery->limit(request()->limit ?? 25);
             $clientQuery->skip(request()->offset ?? 0);
@@ -32,7 +33,8 @@ class ClientController extends Controller
         return response($client, 200);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = $request->only(['login', 'password']);
 
         return response(json_encode($credentials), 200);
@@ -41,8 +43,8 @@ class ClientController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(ClientPostRequest $request)
     {
@@ -62,8 +64,8 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Swagger\v1\Client $client
-     * @return \Illuminate\Http\Response
+     * @param Client $client
+     * @return Response
      */
     public function show(Client $client)
     {
@@ -73,9 +75,9 @@ class ClientController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Swagger\v1\Client $client
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Client $client
+     * @return Response
      */
     public function update(ClientPatchRequest $request, Client $client)
     {
@@ -96,8 +98,8 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Swagger\v1\Client $client
-     * @return \Illuminate\Http\Response
+     * @param Client $client
+     * @return Response
      */
     public function destroy(Client $client)
     {

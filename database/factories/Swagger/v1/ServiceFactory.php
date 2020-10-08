@@ -24,6 +24,7 @@ class ServiceFactory extends Factory
     {
         return [
             'name' => $this->faker->jobTitle,
+            'client_id' => $this->faker->numberBetween(1,50),
             'image' => $this->faker->imageUrl(),
             'text' => $this->faker->realText(),
         ];

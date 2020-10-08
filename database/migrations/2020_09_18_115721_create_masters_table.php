@@ -15,6 +15,7 @@ class CreateMastersTable extends Migration
     {
         Schema::create('masters', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('client_id')->unsigned();
             $table->string('image')->nullable();
             $table->string('name', 128)->nullable();
             $table->string('description', 255)->nullable();

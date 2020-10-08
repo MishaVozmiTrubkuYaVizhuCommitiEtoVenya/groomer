@@ -2,75 +2,78 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonGetRequest;
-use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonPatchRequest;
-use App\Http\Requests\Swagger\v1\WorkingDiapazon\WorkingDiapazonPostRequest;
-use App\Models\Swagger\v1\WorkingDiapazon;
+use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonGetRequest;
+use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPatchRequest;
+use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPostRequest;
+use App\Models\Swagger\v1\WorkingDiapason;
 
-class WorkingDiapazonController extends Controller
+class WorkingDiapasonController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param WorkingDiapasonGetRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index(WorkingDiapazonGetRequest $request)
+    public function index(WorkingDiapasonGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit','offset', 'master_id']);
 
         if($requestParams){
-            $itemQuery = WorkingDiapazon::query();
+            $itemQuery = WorkingDiapason::query();
+            $itemQuery->where('master_id', request()->master_id);
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
-            $workingDiapazon = $itemQuery->get();
+            $workingDiapason = $itemQuery->get();
         } else {
-            $workingDiapazon = WorkingDiapazon::limit(25)->get();
+            $workingDiapason = WorkingDiapason::limit(25)->get();
         }
-        return response($workingDiapazon, 200);
+        return response($workingDiapason, 200);
     }
 
     /**
-     * WorkingDiapazon a newly created resource in storage.
+     * WorkingDiapason a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(WorkingDiapazonPostRequest $request)
+    public function store(WorkingDiapasonPostRequest $request)
     {
-        $workingDiapazon = WorkingDiapazon::create(
+        $workingDiapason = WorkingDiapason::create(
             $request->only(
                 [
                     "type",
                     "name",
                     "image",
                     "settings",
+                    "master_id",
                 ]
             )
         );
-        return response($workingDiapazon, 201);
+        return response($workingDiapason, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Swagger\v1\WorkingDiapazon $workingDiapazon
+     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkingDiapazon $workingDiapazon)
+    public function show(WorkingDiapason $workingDiapason)
     {
-        return response($workingDiapazon, 200);
+        return response($workingDiapason, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Swagger\v1\WorkingDiapazon $workingDiapazon
+     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
      * @return \Illuminate\Http\Response
      */
-    public function update(WorkingDiapazonPatchRequest $request, WorkingDiapazon $workingDiapazon)
+    public function update(WorkingDiapasonPatchRequest $request, WorkingDiapason $workingDiapason)
     {
-        $workingDiapazon->update(
+        $workingDiapason->update(
             $request->only(
                 [
                     "time_start",
@@ -80,17 +83,17 @@ class WorkingDiapazonController extends Controller
             )
         );
 
-        return response($workingDiapazon, 200);
+        return response($workingDiapason, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Swagger\v1\WorkingDiapazon $workingDiapazon
+     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
      * @return \Illuminate\Http\Response
      */
-    public function destroy(WorkingDiapazon $workingDiapazon)
+    public function destroy(WorkingDiapason $workingDiapason)
     {
-        return response($workingDiapazon->delete(), 204);
+        return response($workingDiapason->delete(), 204);
     }
 }

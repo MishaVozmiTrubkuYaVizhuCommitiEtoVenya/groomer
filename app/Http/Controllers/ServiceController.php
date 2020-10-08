@@ -16,10 +16,11 @@ class ServiceController extends Controller
      */
     public function index(ServiceGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset']);
+        $requestParams = $request->only(['limit','offset','client_id']);
 
         if($requestParams){
             $itemQuery = Service::query();
+            $itemQuery->where('client_id', request()->client_id);
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
             $service = $itemQuery->get();
@@ -37,12 +38,13 @@ class ServiceController extends Controller
      */
     public function store(ServicePostRequest $request)
     {
+        return($request->all());
         $service = Service::create(
             $request->only(
                 [
                     "name",
                     "image",
-                    "text",
+                    "text", 'client_id'
                 ]
             )
         );
@@ -74,7 +76,7 @@ class ServiceController extends Controller
                 [
                     "name",
                     "image",
-                    "text",
+                    "text", 'client_id'
                 ]
             )
         );

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Swagger\v1\WorkingDiapazon;
+use App\Models\Swagger\v1\WorkingDiapason;
 use Illuminate\Database\Seeder;
 
-class WorkingDiapazonSeeder extends Seeder
+class WorkingDiapasonSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class WorkingDiapazonSeeder extends Seeder
      */
     public function run()
     {
-        WorkingDiapazon::factory(50)->create();
+        WorkingDiapason::factory(50)->create();
     }
 }

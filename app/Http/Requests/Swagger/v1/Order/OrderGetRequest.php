@@ -13,7 +13,7 @@ class OrderGetRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->guard('masters')->user() || auth()->guard('clients')->user();
     }
 
     /**

@@ -13,7 +13,7 @@ class MasterPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->guard('clients')->user();
     }
 
     /**

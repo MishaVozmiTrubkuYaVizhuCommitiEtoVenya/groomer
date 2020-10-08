@@ -47,3 +47,4 @@ Route::get('clients', function(){
 Route::get('masters', function(){
     return \App\Models\Swagger\v1\Master::all();
 });
+

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkingDiapasonsTable extends Migration
+class ServiceOrders extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateWorkingDiapasonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('working_diapasons', function (Blueprint $table) {
+        Schema::create('order_services', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('master_id')->unsigned();
-            $table->integer('size')->unsigned()->nullable();
-            $table->dateTime('time_start');
-            $table->boolean('state');
+            $table->bigInteger('order_id')->unsigned();
+            $table->bigInteger('service_id')->unsigned();
+
         });
     }
 
@@ -29,6 +28,6 @@ class CreateWorkingDiapasonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('working_diapasons');
+        Schema::dropIfExists('order_services');
     }
 }

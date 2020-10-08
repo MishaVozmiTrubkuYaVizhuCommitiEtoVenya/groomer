@@ -24,8 +24,10 @@ class PromotionFactory extends Factory
     {
         return [
             'title' => $this->faker->title,
+            'client_id' => $this->faker->numberBetween(1,50),
             'text' => $this->faker->realText(),
-            'url' => $this->faker->url,
+            'image' => $this->faker->imageUrl(),
+            'date_start' => $this->faker->dateTime('now')
         ];
     }
 }
