@@ -18,7 +18,7 @@ class CreateWorkingDiapasonsTable extends Migration
             $table->bigInteger('master_id')->unsigned();
             $table->integer('size')->unsigned()->nullable();
             $table->dateTime('time_start');
-            $table->boolean('state');
+            $table->tinyInteger('state');
         });
     }
 
