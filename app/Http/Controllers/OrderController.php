@@ -39,23 +39,9 @@ class OrderController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(OrderPostRequest $request)
+    public function store(OrderPostRequest $request): Response
     {
-        OrderService::createOrder($request);
-        die;
-        $order = Order::create(
-            $request->only(
-                [
-                    "working_diapason_start_id",
-                    "working_diapason_end_id",
-                    "pet_id",
-                    "phone",
-                    "pet_name",
-                    "owner_name",
-                ]
-            )
-        );
-        return response($order, 201);
+        return OrderService::createOrder($request);
     }
 
     /**

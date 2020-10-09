@@ -17,7 +17,6 @@ class OrderService
     private static function notifyGroomer($data)
     {
         Mail::to($data['master']['email'])->send(new NewOrder($data));
-
     }
 
     private static function storeOrder($data)
@@ -30,16 +29,14 @@ class OrderService
         Mail::to($data['client']['email'])->send(new NewOrder($data));
     }
 
-    private static function changeWorkingDiapasonState(Request $data)
+    private static function changeWorkingDiapasonState(Request $data): bool
     {
-
         if (WorkingDiapasonService::isStateFree($data['working_diapason_start_id'])){
             WorkingDiapasonService::changeState($data['working_diapason_start_id'], WorkingDiapasonService::BOOKED_STATE);
         } else {
-            //TODO: Описать ошибку занятого времени
-            return response("", 422);
+            return false;
         }
-        return null;
+        return true;
     }
 
     private static function schedulePushNotification($data)
@@ -50,7 +47,7 @@ class OrderService
     {
         $data = $request->all();
         $data['working_diapason'] = WorkingDiapason::find($data['working_diapason_start_id'])->toArray();
-        $data['master'] = Master::find($data['working_diapason']['master_id'])->makeVisible('client_id')->toArray();
+        $data['master'] = Master::find($data['working_diapason']['master_id'])->makeVisible(['client_id', 'email'])->toArray();
         $data['client'] = Client::find($data['master']['client_id'])->toArray();
 
         return $data;
@@ -59,7 +56,11 @@ class OrderService
     public static function createOrder(Request $request){
 
         $data = OrderService::getFullOrderData($request);
-        OrderService::changeWorkingDiapasonState($request);
+        if(!OrderService::changeWorkingDiapasonState($request)){
+            //TODO: Описать ошибку занятого времени
+            return response(["message"=>__("Время занято")], 422);
+        }
+
         OrderService::schedulePushNotification($data);
         OrderService::notifyAdmin($data);
         OrderService::notifyGroomer($data);
