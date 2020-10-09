@@ -1383,6 +1383,10 @@
             "nullable" : false,
             "type" : "string"
           },
+          "phone" : {
+            "nullable" : true,
+            "type" : "string"
+          },
           "description" : {
             "nullable" : true,
             "type" : "string"

@@ -20,6 +20,7 @@ class CreateMastersTable extends Migration
             $table->string('name', 128)->nullable();
             $table->string('description', 255)->nullable();
             $table->string('email')->unique();
+            $table->string('phone', 20)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

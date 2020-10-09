@@ -16,7 +16,22 @@ class OrderService
 {
     private static function notifyGroomer($data)
     {
+        //email notify
         Mail::to($data['master']['email'])->send(new NewOrder($data));
+
+        //sms notify
+        if (isset($data['master']['phone'])) {
+            $client = new \GuzzleHttp\Client();
+            $client->get(
+                'https://sms.ru/sms/send?api_id='
+                . config('smsru.key')
+                . '&to='
+                . $data['master']['phone']
+                . '&msg='
+                . view('mail.smsru', compact('data'))
+                .'&json=1'
+            );
+        }
     }
 
     private static function storeOrder($data)
@@ -31,8 +46,11 @@ class OrderService
 
     private static function changeWorkingDiapasonState(Request $data): bool
     {
-        if (WorkingDiapasonService::isStateFree($data['working_diapason_start_id'])){
-            WorkingDiapasonService::changeState($data['working_diapason_start_id'], WorkingDiapasonService::BOOKED_STATE);
+        if (WorkingDiapasonService::isStateFree($data['working_diapason_start_id'])) {
+            WorkingDiapasonService::changeState(
+                $data['working_diapason_start_id'],
+                WorkingDiapasonService::BOOKED_STATE
+            );
         } else {
             return false;
         }
@@ -47,18 +65,19 @@ class OrderService
     {
         $data = $request->all();
         $data['working_diapason'] = WorkingDiapason::find($data['working_diapason_start_id'])->toArray();
-        $data['master'] = Master::find($data['working_diapason']['master_id'])->makeVisible(['client_id', 'email'])->toArray();
+        $data['master'] = Master::find($data['working_diapason']['master_id'])
+            ->makeVisible(['client_id', 'email', 'phone'])->toArray();
         $data['client'] = Client::find($data['master']['client_id'])->toArray();
 
         return $data;
     }
 
-    public static function createOrder(Request $request){
-
+    public static function createOrder(Request $request)
+    {
         $data = OrderService::getFullOrderData($request);
-        if(!OrderService::changeWorkingDiapasonState($request)){
+        if (!OrderService::changeWorkingDiapasonState($request)) {
             //TODO: Описать ошибку занятого времени
-            return response(["message"=>__("Время занято")], 422);
+            return response(["message" => __("Время занято")], 422);
         }
 
         OrderService::schedulePushNotification($data);
@@ -66,7 +85,7 @@ class OrderService
         OrderService::notifyGroomer($data);
         OrderService::storeOrder($data);
 
-        return response('',201);
+        return response('', 201);
     }
 
 }

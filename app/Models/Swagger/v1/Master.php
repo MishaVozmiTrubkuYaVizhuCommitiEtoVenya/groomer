@@ -20,13 +20,15 @@ class Master extends Authenticatable
         'email',
         'password',
         'client_id',
+        'phone'
     ];
     protected $hidden = [
         'password',
         'remember_token',
         'client_id',
         'email',
-        'email_verified_at'
+        'email_verified_at',
+        'phone'
     ];
 
     public function client()
