@@ -11,7 +11,7 @@
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.0.2"
+    "version" : "1.0.3"
   },
   "servers" : [ {
     "url" : "http://kosolapus.ddns.net/api/v1"
@@ -573,6 +573,24 @@
           "schema" : {
             "type" : "integer"
           }
+        }, {
+          "description" : "Начало периода",
+          "in" : "query",
+          "name" : "date_start",
+          "required" : false,
+          "schema" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Конец периода",
+          "in" : "query",
+          "name" : "date_end",
+          "required" : false,
+          "schema" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -969,6 +987,33 @@
           "schema" : {
             "type" : "integer"
           }
+        }, {
+          "description" : "Если требуется только свободное время для записи",
+          "in" : "query",
+          "name" : "only_free",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          }
+        }, {
+          "description" : "Начало периода",
+          "in" : "query",
+          "name" : "date_start",
+          "required" : false,
+          "schema" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Конец периода",
+          "in" : "query",
+          "name" : "date_end",
+          "required" : false,
+          "schema" : {
+            "format" : "datetime",
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1305,6 +1350,11 @@
           },
           "comment" : {
             "description" : "Поле комментария в форме заказа",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "push_device_id" : {
+            "description" : "OneSignal идентификатор устройства",
             "nullable" : true,
             "type" : "string"
           }

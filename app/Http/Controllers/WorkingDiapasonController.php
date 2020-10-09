@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonGetRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPatchRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPostRequest;
 use App\Models\Swagger\v1\WorkingDiapason;
+use App\Services\WorkingDiapasonService;
 
 class WorkingDiapasonController extends Controller
 {
@@ -17,18 +18,10 @@ class WorkingDiapasonController extends Controller
      */
     public function index(WorkingDiapasonGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset', 'master_id']);
 
-        if($requestParams){
-            $itemQuery = WorkingDiapason::query();
-            $itemQuery->where('master_id', request()->master_id);
-            $itemQuery->limit(request()->limit ?? 25);
-            $itemQuery->skip(request()->offset ?? 0);
-            $workingDiapason = $itemQuery->get();
-        } else {
-            $workingDiapason = WorkingDiapason::limit(25)->get();
-        }
-        return response($workingDiapason, 200);
+        $returnData = WorkingDiapasonService::getList($request);
+
+        return response($returnData, 200);
     }
 
     /**

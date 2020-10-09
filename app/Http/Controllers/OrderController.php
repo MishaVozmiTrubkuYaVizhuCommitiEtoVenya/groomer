@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\Order\OrderGetRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPatchRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPostRequest;
 use App\Models\Swagger\v1\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -40,6 +41,8 @@ class OrderController extends Controller
      */
     public function store(OrderPostRequest $request)
     {
+        OrderService::createOrder($request);
+        die;
         $order = Order::create(
             $request->only(
                 [
