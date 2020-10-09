@@ -16,6 +16,7 @@ class OrderService
 {
     private static function notifyGroomer($data)
     {
+        //TODO:Вынести в очередь
         //email notify
         Mail::to($data['master']['email'])->send(new NewOrder($data));
 
