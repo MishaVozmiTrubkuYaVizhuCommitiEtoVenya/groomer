@@ -6,12 +6,12 @@
       "name" : "Mike",
       "url" : "http://kosolapus.ddns.net/"
     },
-    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\n### Changelog\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
+    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\n### Changelog\n\n**v1.1.0**: Убрал пуши из API\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
     "license" : {
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.0.4"
+    "version" : "1.1.0"
   },
   "servers" : [ {
     "url" : "http://kosolapus.ddns.net/api/v1"
@@ -33,9 +33,6 @@
   }, {
     "description" : "Управление акциями\n",
     "name" : "Promotion"
-  }, {
-    "description" : "Работа с пушами. Не уверен, что этому вообще место в апи есть,\nно оставлю, пусть пока будет\n",
-    "name" : "Push"
   }, {
     "description" : "Календари труженников когтеточки и ножниц\n",
     "name" : "WorkingDiapason"
@@ -696,119 +693,6 @@
         "tags" : [ "Promotion" ]
       }
     },
-    "/push" : {
-      "get" : {
-        "description" : "Store *Push* entity",
-        "parameters" : [ {
-          "description" : "Как много элементов должно возвращаться за один запрос",
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 25,
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Смещение от первого",
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Push" ]
-      },
-      "post" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Push"
-              }
-            }
-          },
-          "description" : "Store *Push* entity",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Push" ]
-      }
-    },
-    "/push/{push}" : {
-      "delete" : {
-        "description" : "",
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Push" ]
-      },
-      "get" : {
-        "description" : "",
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Push"
-                }
-              }
-            },
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Push" ]
-      },
-      "parameters" : [ {
-        "description" : "Id requested Push",
-        "example" : 1,
-        "in" : "path",
-        "name" : "push",
-        "required" : true,
-        "schema" : {
-          "minimum" : 1,
-          "type" : "integer"
-        }
-      } ],
-      "patch" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Push"
-              }
-            }
-          },
-          "description" : "Optional description in *Markdown*",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Push" ]
-      }
-    },
     "/service" : {
       "get" : {
         "description" : "Store *Service* entity",
@@ -1402,17 +1286,6 @@
           "description" : {
             "nullable" : true,
             "type" : "string"
-          }
-        },
-        "type" : "object"
-      },
-      "Push" : {
-        "description" : "TODO: Осмысленное описание объекта Пушей\n",
-        "properties" : {
-          "id" : {
-            "format" : "int64",
-            "readOnly" : true,
-            "type" : "integer"
           }
         },
         "type" : "object"
