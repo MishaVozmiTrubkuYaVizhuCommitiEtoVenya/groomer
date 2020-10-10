@@ -60,6 +60,7 @@ class OrderService
 
     private static function schedulePushNotification($data)
     {
+        //TODO: Заимплементить пуши в указанное время.
     }
 
     private static function getFullOrderData(Request $request): array
