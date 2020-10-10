@@ -20,15 +20,23 @@ class WorkingDiapasonService
         if ($requestParams) {
             $itemQuery = WorkingDiapason::query();
             $itemQuery->where('master_id', $requestParams['master_id']);
-            $itemQuery->when(isset($requestParams['only_free']), function($q){
-                $q->where('state', WorkingDiapasonService::FREE_STATE);
-            });
+            if(auth()->user()){
+                $itemQuery->when(isset($requestParams['only_free']), function($q){
+                    $q->where('state', WorkingDiapasonService::FREE_STATE);
+                });
+            } else {
+                $itemQuery->where('state', WorkingDiapasonService::FREE_STATE);
+                $itemQuery->where('time_start','>=', date('Y-m-d H:i:s'));
+            }
+
             $itemQuery->when(isset($requestParams['date_start']), function($q) use ($requestParams) {
                 $q->where('time_start','>=', $requestParams['date_start']);
             });
             $itemQuery->when(isset($requestParams['date_end']), function($q) use ($requestParams) {
                 $q->where('time_start','<=', $requestParams['date_end']);
             });
+
+
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
             $workingDiapason = $itemQuery->get();
