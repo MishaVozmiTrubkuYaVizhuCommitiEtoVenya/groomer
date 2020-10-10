@@ -10,7 +10,14 @@ class Promotion extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $fillable = ["title", "text", "url", "image"];
+    protected $fillable = [
+        "title",
+        "text",
+        "url",
+        "image",
+        "date_start",
+        "date_end"
+    ];
 
     public function client()
     {

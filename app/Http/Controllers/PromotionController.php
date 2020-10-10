@@ -16,9 +16,15 @@ class PromotionController extends Controller
      */
     public function index(PromotionGetRequest $request)
     {
-        $requestParams = $request->only(['limit','offset','client_id']);
+        $requestParams = $request->only(['limit','offset','client_id', "date_start", "date_end"]);
 
         $itemQuery = Promotion::query();
+        $itemQuery->when(isset($requestParams['date_start']), function($q) use ($requestParams) {
+            $q->where('time_start','>=', $requestParams['date_start']);
+        });
+        $itemQuery->when(isset($requestParams['date_end']), function($q) use ($requestParams) {
+            $q->where('time_start','<=', $requestParams['date_end']);
+        });
         $itemQuery->where('client_id', $requestParams['client_id']);
         $itemQuery->limit($requestParams['limit'] ?? 25);
         $itemQuery->skip($requestParams['offset'] ?? 0);
