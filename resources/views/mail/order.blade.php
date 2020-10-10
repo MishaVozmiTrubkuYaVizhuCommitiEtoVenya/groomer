@@ -10,7 +10,7 @@
         </tr>
         <tr>
             <td>
-                {{ __('Время') }} : {{ $order['working_diapason_start_id'] }}
+                {{ __('Время') }} : {{ $order['working_diapason']['time_start'] }}
             </td>
         </tr>
         <tr>
