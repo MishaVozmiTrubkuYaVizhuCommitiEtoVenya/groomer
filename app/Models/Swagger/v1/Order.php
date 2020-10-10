@@ -22,6 +22,6 @@ class Order extends Model
     ];
 
     public function services() : Relation {
-        return $this->hasMany('\App\Models\Swagger\V1\Service');
+        return $this->belongsToMany('\App\Models\Swagger\v1\Service', 'order_services');
     }
 }

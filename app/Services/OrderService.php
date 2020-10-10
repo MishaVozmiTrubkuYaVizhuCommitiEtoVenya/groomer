@@ -37,7 +37,7 @@ class OrderService
 
     private static function storeOrder($data)
     {
-        Order::create($data);
+        Order::create($data)->services()->attach($data['services']);
     }
 
     private static function notifyAdmin($data)
