@@ -16,6 +16,16 @@ class CreatePushesTable extends Migration
         Schema::create('pushes', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('client_id')->unsigned();
+            $table->string('text')->nullable();
+            $table->string('title')->nullable();
+            $table->string('icon')->nullable();
+            $table->string('sound')->nullable();
+            $table->string('description')->nullable();
+            $table->string('platform')->nullable();
+            $table->dateTime('date')->nullable();
+            $table->string('device_token')->nullable();
+            $table->boolean('is_sent')->default(false);
+
             $table->timestamps();
         });
     }
