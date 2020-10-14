@@ -6,15 +6,15 @@
       "name" : "Mike",
       "url" : "http://kosolapus.ddns.net/"
     },
-    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\n### Changelog\n\n**v1.1.0**: Убрал пуши из API\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
+    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\nTODO:\n1. Обновить структуру описания в соответствии со структурой БД\n2. Подготовить возможность тестирования\n3. Добавить тест-кейсы для всего API\n\n### Changelog\n\n**v1.1.3**: Добавил описания возвращаемых кодов.\n\n**v1.1.2**: Удалил упоминания Питомцев и Пушей из АПИ\n\n**v1.1.1**: Добавил параметр \"платформа\" для заказа, заменил OneSignal на FCM + APNs\n\n**v1.1.0**: Убрал пуши из API\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
     "license" : {
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.1.0"
+    "version" : "1.1.3"
   },
   "servers" : [ {
-    "url" : "http://kosolapus.ddns.net/api/v1"
+    "url" : "http://192.168.0.17/api/v1"
   } ],
   "tags" : [ {
     "name" : "OAuth"
@@ -66,6 +66,19 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
@@ -100,6 +113,19 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "Аутентифицирует клиента - салон или частного грумера\n",
@@ -153,7 +179,7 @@
         "description" : "Создает нового Клиента. Для работы с этим эндпоинтом\nтребуется доступ как минимум администратора сервиса\n",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/formdata" : {
               "schema" : {
                 "$ref" : "#/components/schemas/Client"
               }
@@ -163,8 +189,27 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
-            "description" : "Ok"
+          "201" : {
+            "description" : "Сущность создана успешно"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -178,8 +223,30 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "404" : {
+            "description" : "Элемент не найден"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -200,6 +267,28 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "404" : {
+            "description" : "Элемент не найден"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -232,6 +321,28 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "404" : {
+            "description" : "Элемент не найден"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -274,6 +385,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -357,8 +487,27 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -379,6 +528,25 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -411,6 +579,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -445,6 +632,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -467,8 +673,27 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "201" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -479,8 +704,27 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -501,6 +745,25 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -536,6 +799,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -596,6 +878,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -615,8 +916,27 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "201" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -630,8 +950,27 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -652,6 +991,25 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -684,6 +1042,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -726,6 +1103,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -768,8 +1164,27 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "201" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -783,8 +1198,27 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -805,6 +1239,25 @@
               }
             },
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -837,6 +1290,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -906,6 +1378,25 @@
         "responses" : {
           "200" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -925,8 +1416,27 @@
           "required" : true
         },
         "responses" : {
-          "200" : {
+          "201" : {
             "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_422"
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -940,28 +1450,27 @@
       "delete" : {
         "description" : "",
         "responses" : {
-          "200" : {
+          "204" : {
             "description" : "Ok"
           },
-          "500" : {
+          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/inline_response_422"
                 }
               }
             },
-            "description" : "Ошибка"
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
-          "4XX" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Ошибка"
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -983,25 +1492,24 @@
             },
             "description" : "Ok"
           },
-          "500" : {
+          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/inline_response_422"
                 }
               }
             },
-            "description" : "Ошибка"
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
-          "4XX" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Ошибка"
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "summary" : "",
@@ -1035,25 +1543,24 @@
           "200" : {
             "description" : "Ok"
           },
-          "500" : {
+          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/schemas/inline_response_422"
                 }
               }
             },
-            "description" : "Ошибка"
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
-          "4XX" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Ошибка"
+          "401" : {
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
         "security" : [ {
@@ -1146,6 +1653,10 @@
             "description" : "Название Клиента",
             "type" : "string"
           },
+          "email" : {
+            "description" : "Электронная почта",
+            "type" : "string"
+          },
           "image" : {
             "description" : "Логотип клиента",
             "format" : "binary",
@@ -1154,24 +1665,6 @@
           },
           "settings" : {
             "type" : "object"
-          }
-        },
-        "type" : "object"
-      },
-      "Pet" : {
-        "description" : "Иногда лохматая, иногда когтистая тварь, чаще всего с лапами, ушами и хвостом.\nКонкретная особь обладает следующими признаками:\n1. Скорость обработки из состояния \"ну мы пришли\" в состояние \"у-ти какой лапочка\"\n2. Позывной\n3. ???\n",
-        "properties" : {
-          "id" : {
-            "format" : "int64",
-            "readOnly" : true,
-            "type" : "integer"
-          },
-          "name" : {
-            "type" : "string"
-          },
-          "average_time_work" : {
-            "nullable" : true,
-            "type" : "string"
           }
         },
         "type" : "object"
@@ -1241,6 +1734,11 @@
             "nullable" : true,
             "type" : "string"
           },
+          "platform" : {
+            "description" : "Платформа",
+            "enum" : [ "android", "ios" ],
+            "type" : "string"
+          },
           "services" : {
             "description" : "Идентификаторы услуг для заказа",
             "items" : {
@@ -1250,7 +1748,7 @@
             "type" : "array"
           },
           "push_device_id" : {
-            "description" : "OneSignal идентификатор устройства",
+            "description" : "Push идентификатор устройства",
             "nullable" : true,
             "type" : "string"
           }
