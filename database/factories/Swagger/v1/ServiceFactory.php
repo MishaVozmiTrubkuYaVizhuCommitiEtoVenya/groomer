@@ -27,6 +27,8 @@ class ServiceFactory extends Factory
             'client_id' => $this->faker->numberBetween(1,50),
             'image' => $this->faker->imageUrl(),
             'text' => $this->faker->realText(),
+            'price' => $this->faker->randomFloat(2, 10, 3000),
+            'type' => $this->faker->randomElement([0,1,2]),
         ];
     }
 }

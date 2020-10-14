@@ -24,7 +24,6 @@ class OrderFactory extends Factory
     {
         return [
             'working_diapason_start_id' => $this->faker->randomDigitNotNull,
-            'working_diapason_end_id' => $this->faker->randomDigitNotNull,
             'pet_id' => $this->faker->randomDigitNotNull,
             'phone' => $this->faker->phoneNumber,
             'pet_name' => $this->faker->name,
