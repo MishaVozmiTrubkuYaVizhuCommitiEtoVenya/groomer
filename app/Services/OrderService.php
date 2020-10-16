@@ -67,8 +67,18 @@ class OrderService
     {
         $data = $request->all();
         $data['working_diapason'] = WorkingDiapason::find($data['working_diapason_start_id'])->toArray();
-        $data['master'] = Master::find($data['working_diapason']['master_id'])
-            ->makeVisible(['client_id', 'email', 'phone'])->toArray();
+        try {
+            if(!Master::find($data['working_diapason']['master_id'])){
+                throw new \Exception('Мастер не связан с салоном:' . $e);
+            }
+
+            $data['master'] = Master::find($data['working_diapason']['master_id'])
+                ->makeVisible(['client_id', 'email', 'phone'])->toArray();
+
+        } catch (\Exception $e){
+            logger($e->getMessage());
+        }
+
         $data['client'] = Client::find($data['master']['client_id'])->toArray();
 
         return $data;

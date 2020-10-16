@@ -16,7 +16,6 @@ class CreateWorkingDiapasonsTable extends Migration
         Schema::create('working_diapasons', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('master_id')->unsigned();
-            $table->integer('size')->unsigned()->nullable();
             $table->dateTime('time_start');
             $table->tinyInteger('state');
         });

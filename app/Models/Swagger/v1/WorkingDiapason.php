@@ -10,7 +10,7 @@ class WorkingDiapason extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $fillable = ["size", "time_start", "state"];
+    protected $fillable = ["time_start", "state"];
 
     public function master()
     {

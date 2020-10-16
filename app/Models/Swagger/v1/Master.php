@@ -33,10 +33,10 @@ class Master extends Authenticatable
 
     public function client()
     {
-        return $this->belongsTo('\App\Models\Swagger\V1\Client');
+        return $this->belongsTo('\App\Models\Swagger\v1\Client');
     }
 
     public function workingDiapasons(){
-        return $this->hasMany('\App\Model\Swagger\V1\WorkingDiapason');
+        return $this->hasMany('\App\Models\Swagger\v1\WorkingDiapason');
     }
 }

@@ -23,9 +23,7 @@ class WorkingDiapasonFactory extends Factory
     public function definition()
     {
         return [
-            'size' => $this->faker->randomDigitNotNull,
-            'master_id' => $this->faker->numberBetween(1,50),
-            'time_start' => $this->faker->dateTime,
+            'time_start' => $this->faker->date('Y-m-d 00:00:00'),
             'state' => $this->faker->boolean(),
         ];
     }
