@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Master;
+use App\Models\Swagger\v1\Promotion;
 use App\Models\Swagger\v1\Service;
 use App\Models\Swagger\v1\WorkingDiapason;
 use Illuminate\Database\Seeder;
@@ -55,7 +56,7 @@ class ClientSeeder extends Seeder
                     $wdMap->setTime(8, 0, 0);
 
                     $master->workingDiapasons()->saveMany(
-                        WorkingDiapason::factory(50)->create(
+                        WorkingDiapason::factory(350)->create(
                             [
                                 'master_id' => $master->id
                             ]
@@ -79,6 +80,15 @@ class ClientSeeder extends Seeder
                 [
                     'client_id' => $client->id,
                     'name' => "Название услуги"
+                ]
+            )
+        );
+
+        $client->promotions()->saveMany(
+            Promotion::factory(5)->create(
+                [
+                    'client_id' => $client->id,
+                    'title' => "Великолепная акция"
                 ]
             )
         );
