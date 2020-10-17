@@ -20,7 +20,7 @@ class PromotionController extends Controller
     public function index(PromotionGetRequest $request): Response
     {
         $promotion = PromotionService::getItemsList($request);
-        return response($promotion, 200);
+        return response('{"response":'. $promotion->toJson() . "}", 200);
     }
 
     /**
@@ -32,7 +32,7 @@ class PromotionController extends Controller
     public function store(PromotionPostRequest $request): Response
     {
         $promotion = PromotionService::createItem($request);
-        return response($promotion, 201);
+        return response($promotion->toJson(), 201);
     }
 
     /**
@@ -43,7 +43,7 @@ class PromotionController extends Controller
      */
     public function show(Promotion $promotion): Response
     {
-        return response($promotion, 200);
+        return response($promotion->toJson(), 200);
     }
 
     /**
@@ -56,7 +56,7 @@ class PromotionController extends Controller
     public function update(PromotionPatchRequest $request, Promotion $promotion): Response
     {
         PromotionService::updateItem($request, $promotion);
-        return response($promotion, 200);
+        return response('{"response":'. $promotion->toJson() . "}", 200);
     }
 
     /**

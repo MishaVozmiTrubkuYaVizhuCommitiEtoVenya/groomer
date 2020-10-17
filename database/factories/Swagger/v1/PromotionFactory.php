@@ -27,7 +27,7 @@ class PromotionFactory extends Factory
             'client_id' => $this->faker->numberBetween(1,50),
             'text' => $this->faker->realText(),
             'image' => $this->faker->imageUrl(),
-            'date_start' => $this->faker->dateTime('now')
+            'date_start' => $this->faker->dateTime()
         ];
     }
 }

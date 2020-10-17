@@ -19,6 +19,12 @@ class Promotion extends Model
         "date_end"
     ];
 
+
+
+    public function getDateStartAttribute($value){
+        return strtotime($value);
+    }
+
     public function client()
     {
         return $this->belongsTo('\App\Models\Swagger\V1\Client');
