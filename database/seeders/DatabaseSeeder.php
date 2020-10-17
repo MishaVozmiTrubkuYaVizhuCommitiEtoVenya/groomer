@@ -22,13 +22,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
         //Client::factory(10)->create();
-        Master::factory(50)->create();
-        Order::factory(50)->create();
-        Pet::factory(50)->create();
-        Promotion::factory(50)->create();
-        Service::factory(50)->create();
-        WorkingDiapason::factory(50)->create();
+        //Master::factory(50)->create();
+        //Order::factory(50)->create();
+        //Pet::factory(50)->create();
+        //Promotion::factory(50)->create();
+        //Service::factory(50)->create();
+        //WorkingDiapason::factory(50)->create();
 
-        //OAuthSeeder::run();
+        (new OAuthSeeder)->run();
+        (new ClientSeeder)->run();
     }
 }
