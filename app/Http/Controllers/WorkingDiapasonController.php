@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonGetRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPatchRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPostRequest;
 use App\Models\Swagger\v1\WorkingDiapason;
+use App\Services\ResponseService;
 use App\Services\WorkingDiapasonService;
 
 class WorkingDiapasonController extends Controller
@@ -14,21 +15,21 @@ class WorkingDiapasonController extends Controller
      * Display a listing of the resource.
      *
      * @param WorkingDiapasonGetRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(WorkingDiapasonGetRequest $request)
     {
 
         $returnData = WorkingDiapasonService::getList($request);
 
-        return response($returnData, 200);
+        return ResponseService::jsonResponse($returnData, 200);
     }
 
     /**
      * WorkingDiapason a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(WorkingDiapasonPostRequest $request)
     {
@@ -43,7 +44,7 @@ class WorkingDiapasonController extends Controller
                 ]
             )
         );
-        return response($workingDiapason, 201);
+        return ResponseService::jsonResponse($workingDiapason, 201);
     }
 
     /**
@@ -62,7 +63,7 @@ class WorkingDiapasonController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(WorkingDiapasonPatchRequest $request, WorkingDiapason $workingDiapason)
     {
@@ -76,17 +77,17 @@ class WorkingDiapasonController extends Controller
             )
         );
 
-        return response($workingDiapason, 200);
+        return ResponseService::jsonResponse($workingDiapason, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(WorkingDiapason $workingDiapason)
     {
-        return response($workingDiapason->delete(), 204);
+        return ResponseService::jsonResponse($workingDiapason->delete(), 204);
     }
 }

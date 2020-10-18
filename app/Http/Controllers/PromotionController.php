@@ -7,6 +7,7 @@ use App\Http\Requests\Swagger\v1\Promotion\PromotionPatchRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPostRequest;
 use App\Models\Swagger\v1\Promotion;
 use App\Services\PromotionService;
+use App\Services\ResponseService;
 use Illuminate\Http\Response;
 
 class PromotionController extends Controller
@@ -15,35 +16,35 @@ class PromotionController extends Controller
      * Display a listing of the resource.
      *
      * @param PromotionGetRequest $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(PromotionGetRequest $request): Response
+    public function index(PromotionGetRequest $request): \Illuminate\Http\JsonResponse
     {
         $promotion = PromotionService::getItemsList($request);
-        return response('{"response":'. $promotion->toJson() . "}", 200);
+        return ResponseService::jsonResponse($promotion, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param PromotionPostRequest $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(PromotionPostRequest $request): Response
+    public function store(PromotionPostRequest $request): \Illuminate\Http\JsonResponse
     {
         $promotion = PromotionService::createItem($request);
-        return response($promotion->toJson(), 201);
+        return ResponseService::jsonResponse($promotion, 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Promotion $promotion
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Promotion $promotion): Response
+    public function show(Promotion $promotion): \Illuminate\Http\JsonResponse
     {
-        return response($promotion->toJson(), 200);
+        return ResponseService::jsonResponse($promotion, 200);
     }
 
     /**
@@ -51,12 +52,12 @@ class PromotionController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param Promotion $promotion
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(PromotionPatchRequest $request, Promotion $promotion): Response
+    public function update(PromotionPatchRequest $request, Promotion $promotion): \Illuminate\Http\JsonResponse
     {
         PromotionService::updateItem($request, $promotion);
-        return response('{"response":'. $promotion->toJson() . "}", 200);
+        return ResponseService::jsonResponse($promotion, 200);
     }
 
     /**
@@ -68,6 +69,6 @@ class PromotionController extends Controller
     public function destroy(Promotion $promotion): Response
     {
         PromotionService::deleteItem($promotion);
-        return response('', 204);
+        return ResponseService::noContent();
     }
 }

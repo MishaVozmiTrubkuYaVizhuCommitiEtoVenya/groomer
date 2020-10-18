@@ -23,7 +23,7 @@ class ClientSeeder extends Seeder
             [
                 'type' => round(rand(0, 1)),
                 'name' => "Рога и копыта",
-                'image' => "",
+                'image' => "https://picsum.photos/200/200",
                 'settings' => json_encode(
                     [
                         'address' => 'Воронеж, ул. Урывского, 27',
@@ -32,9 +32,8 @@ class ClientSeeder extends Seeder
                         'email' => 'client@groomer.ru',
                         'timezone' => '+3',
                         'buttons' => [
-                            'tg' => ['icon' => '', 'url' => 'https://t.me/fox_renard'],
-                            'wa' => ['icon' => '', 'url' => ''],
-                            'email' => ['icon' => '', 'url' => 'mailto:admin@groomer.ru'],
+                            'tg' => ['icon' => 'https://picsum.photos/128/128', 'url' => 'https://t.me/fox_renard'],
+                            'email' => ['icon' => 'https://picsum.photos/128/128', 'url' => 'mailto:admin@groomer.ru'],
                         ],
                         'coords' => [
                             'lat' => '51.673315',

@@ -10,9 +10,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
+/**
+ * Class MasterService
+ * @package App\Services
+ */
 class MasterService
 {
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public static function createDataFromRequest(Request $request): array
     {
         $masterData = $request->only(['name', 'email', 'password', 'description']);
@@ -22,6 +30,10 @@ class MasterService
         return $masterData;
     }
 
+    /**
+     * @param Request $request
+     * @return \stdClass
+     */
     public static function getItemsList(Request $request): \stdClass
     {
         $requestParams = $request->only(['limit', 'offset', 'client_id']);
@@ -47,6 +59,10 @@ class MasterService
         return $returnData;
     }
 
+    /**
+     * @param Model $master
+     * @return \stdClass
+     */
     public static function getItem(Model $master): \stdClass
     {
         $returnData = new \stdClass();
@@ -60,6 +76,10 @@ class MasterService
         return $returnData;
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     */
     private static function storeImageFromRequest(Request $request): string
     {
         $path = "";

@@ -7,6 +7,7 @@ use App\Http\Requests\Swagger\v1\Order\OrderPatchRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPostRequest;
 use App\Models\Swagger\v1\Order;
 use App\Services\OrderService;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,7 +16,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(OrderGetRequest $request)
     {
@@ -30,7 +31,7 @@ class OrderController extends Controller
         } else {
             $order = Order::limit(25)->get();
         }
-        return response($order, 200);
+        return ResponseService::jsonResponse($order, 200);
     }
 
     /**
@@ -48,11 +49,11 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param Order $order
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Order $order)
+    public function show(Order $order): \Illuminate\Http\JsonResponse
     {
-        return response($order, 200);
+        return ResponseService::jsonResponse($order, 200);
     }
 
     /**
@@ -60,7 +61,7 @@ class OrderController extends Controller
      *
      * @param Request $request
      * @param Order $order
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(OrderPatchRequest $request, Order $order)
     {
@@ -77,17 +78,17 @@ class OrderController extends Controller
             )
         );
 
-        return response($order, 200);
+        return ResponseService::jsonResponse($order, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Order $order
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Order $order)
     {
-        return response($order->delete(), 204);
+        return ResponseService::jsonResponse($order->delete(), 204);
     }
 }

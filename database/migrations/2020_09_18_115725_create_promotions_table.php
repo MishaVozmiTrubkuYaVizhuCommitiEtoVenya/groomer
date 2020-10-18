@@ -17,8 +17,8 @@ class CreatePromotionsTable extends Migration
             $table->id();
             $table->bigInteger('client_id')->unsigned();
             $table->string('title',128);
-            $table->text('text')->nullable();
-            $table->string('image')->nullable();
+            $table->text('full_description')->nullable();
+            $table->string('image_url')->nullable();
             $table->dateTime('date_start');
             $table->dateTime('date_end')->nullable();
         });

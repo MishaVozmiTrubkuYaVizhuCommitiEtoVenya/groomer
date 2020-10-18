@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Client\ClientGetListRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientGetRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPatchRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPostRequest;
 use App\Models\Swagger\v1\Client;
+use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -14,10 +16,10 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param ClientGetRequest $request
-     * @return Response
+     * @param ClientGetListRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(ClientGetRequest $request)
+    public function index(ClientGetListRequest $request): \Illuminate\Http\JsonResponse
     {
         $requestParams = $request->only(['limit', 'offset']);
 
@@ -30,23 +32,16 @@ class ClientController extends Controller
             $client = Client::limit(25)->get();
         }
 
-        return response($client, 200);
-    }
-
-    public function login(Request $request)
-    {
-        $credentials = $request->only(['login', 'password']);
-
-        return response(json_encode($credentials), 200);
+        return ResponseService::jsonResponse($client, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(ClientPostRequest $request)
+    public function store(ClientPostRequest $request): \Illuminate\Http\JsonResponse
     {
         $client = Client::create(
             $request->only(
@@ -58,18 +53,18 @@ class ClientController extends Controller
                 ]
             )
         );
-        return response($client, 201);
+        return ResponseService::jsonResponse($client, 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Client $client
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Client $client)
+    public function show(Client $client): \Illuminate\Http\JsonResponse
     {
-        return response($client, 200);
+        return ResponseService::jsonResponse($client, 200);
     }
 
     /**
@@ -77,9 +72,9 @@ class ClientController extends Controller
      *
      * @param Request $request
      * @param Client $client
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(ClientPatchRequest $request, Client $client)
+    public function update(ClientPatchRequest $request, Client $client): \Illuminate\Http\JsonResponse
     {
         $client->update(
             $request->only(
@@ -92,7 +87,7 @@ class ClientController extends Controller
             )
         );
 
-        return response($client, 200);
+        return ResponseService::jsonResponse($client, 200);
     }
 
     /**
@@ -101,8 +96,9 @@ class ClientController extends Controller
      * @param Client $client
      * @return Response
      */
-    public function destroy(Client $client)
+    public function destroy(Client $client): Response
     {
-        return response($client->delete(), 204);
+        $client->delete();
+        return  ResponseService::noContent();
     }
 }

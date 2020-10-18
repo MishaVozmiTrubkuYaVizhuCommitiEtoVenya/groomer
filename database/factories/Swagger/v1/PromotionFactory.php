@@ -22,12 +22,27 @@ class PromotionFactory extends Factory
      */
     public function definition()
     {
+
+        $date = new \DateTime('now');
+        $date->setTime(0,0,0);
+        $date_start = $date->format('Y-m-d H:i:s');
+        $date_end = $date->modify('+1 day')->format('Y-m-d H:i:s');
+
+
+        try {
+            $date_start = $date->modify('-'.random_int(0,13).' day')->format('Y-m-d H:i:s');
+            $date_end = $date->modify('+'.random_int(13,35).' day')->format('Y-m-d H:i:s');
+        } catch (\Exception $e) {
+            logger('What are fuck? I can\'t create unique integer!');
+        }
+
         return [
             'title' => $this->faker->title,
             'client_id' => $this->faker->numberBetween(1,50),
-            'text' => $this->faker->realText(),
-            'image' => $this->faker->imageUrl(),
-            'date_start' => $this->faker->dateTime()
+            'full_description' => $this->faker->realText(),
+            'image_url' => $this->faker->imageUrl(),
+            'date_start' => $date_start,
+            'date_end' => $date_end
         ];
     }
 }

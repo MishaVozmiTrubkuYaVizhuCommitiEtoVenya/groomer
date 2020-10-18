@@ -7,43 +7,44 @@ use App\Http\Requests\Swagger\v1\Master\MasterPatchRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPostRequest;
 use App\Models\Swagger\v1\Master;
 use App\Services\MasterService;
+use App\Services\ResponseService;
 
 class MasterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(MasterGetRequest $request): \Illuminate\Http\Response
+    public function index(MasterGetRequest $request): \Illuminate\Http\JsonResponse
     {
         $returnData = MasterService::getItemsList($request);
-        return response($returnData->jsonContent, $returnData->statusCode);
+        return  ResponseService::jsonResponse($returnData->jsonContent, $returnData->statusCode);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(MasterPostRequest $request): \Illuminate\Http\Response
+    public function store(MasterPostRequest $request): \Illuminate\Http\JsonResponse
     {
         $masterData = MasterService::createDataFromRequest($request);
         $master = Master::create($masterData);
-        return response($master, 201);
+        return ResponseService::jsonResponse($master,201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param \App\Models\Swagger\v1\Master $master
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Master $master): \Illuminate\Http\Response
+    public function show(Master $master): \Illuminate\Http\JsonResponse
     {
         $masterData = MasterService::getItem($master);
-        return response($masterData->jsonContent, $masterData->statusCode);
+        return ResponseService::jsonResponse($masterData->jsonContent, $masterData->statusCode);
     }
 
     /**
@@ -51,7 +52,7 @@ class MasterController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Swagger\v1\Master $master
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(MasterPatchRequest $request, Master $master)
     {
@@ -66,17 +67,17 @@ class MasterController extends Controller
             )
         );
 
-        return response($master, 200);
+        return ResponseService::jsonResponse($master, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param \App\Models\Swagger\v1\Master $master
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Master $master)
     {
-        return response($master->delete(), 204);
+        return ResponseService::jsonResponse($master->delete(), 204);
     }
 }

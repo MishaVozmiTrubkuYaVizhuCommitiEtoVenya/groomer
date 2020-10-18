@@ -881,6 +881,13 @@
         } ],
         "responses" : {
           "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            },
             "description" : "Ok"
           },
           "422" : {
@@ -1686,18 +1693,24 @@
             "description" : "Заголовок Акции",
             "type" : "string"
           },
-          "text" : {
+          "full_description" : {
             "description" : "Текст Акции, поддерживает разметку",
+            "type" : "string"
+          },
+          "image_url" : {
+            "description" : "Изображение акции",
+            "format" : "url",
             "type" : "string"
           },
           "date_start" : {
             "description" : "Дата начала акции",
-            "format" : "datetime",
-            "type" : "string"
+            "format" : "timestamp",
+            "type" : "integer"
           },
-          "url" : {
-            "description" : "Уникальный адрес акции для доступа с сайта",
-            "type" : "string"
+          "date_end" : {
+            "description" : "Дата окончания акции",
+            "format" : "timestamp",
+            "type" : "integer"
           }
         },
         "type" : "object"
@@ -1843,6 +1856,17 @@
         "properties" : {
           "message" : {
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_response_200" : {
+        "properties" : {
+          "response" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Promotion"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"

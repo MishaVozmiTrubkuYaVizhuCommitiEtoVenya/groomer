@@ -4,7 +4,7 @@ namespace App\Http\Requests\Swagger\v1\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClientPostRequest extends FormRequest
+class ClientGetListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

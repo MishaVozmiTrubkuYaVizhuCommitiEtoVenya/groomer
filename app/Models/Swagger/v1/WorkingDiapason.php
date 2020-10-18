@@ -12,6 +12,10 @@ class WorkingDiapason extends Model
     public $timestamps = false;
     protected $fillable = ["time_start", "state"];
 
+    public function getTimeStartAttribute($value){
+        return strtotime($value);
+    }
+
     public function master()
     {
         return $this->belongsTo('\App\Models\Swagger\V1\Master');
