@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonDeleteRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonGetRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPatchRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPostRequest;
@@ -53,7 +54,7 @@ class WorkingDiapasonController extends Controller
      * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkingDiapason $workingDiapason)
+    public function show(WorkingDiapasonGetRequest $request, WorkingDiapason $workingDiapason)
     {
         return response($workingDiapason, 200);
     }
@@ -86,7 +87,7 @@ class WorkingDiapasonController extends Controller
      * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(WorkingDiapason $workingDiapason)
+    public function destroy(WorkingDiapasonDeleteRequest $request, WorkingDiapason $workingDiapason)
     {
         return ResponseService::jsonResponse($workingDiapason->delete(), 204);
     }

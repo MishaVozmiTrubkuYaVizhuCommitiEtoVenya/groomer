@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Master\MasterDeleteRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterGetRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPatchRequest;
 use App\Http\Requests\Swagger\v1\Master\MasterPostRequest;
+use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Master;
 use App\Services\MasterService;
 use App\Services\ResponseService;
@@ -14,12 +16,13 @@ class MasterController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param MasterGetRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(MasterGetRequest $request): \Illuminate\Http\JsonResponse
+    public function index(MasterGetRequest $request, Client $client): \Illuminate\Http\JsonResponse
     {
-        $returnData = MasterService::getItemsList($request);
-        return  ResponseService::jsonResponse($returnData->jsonContent, $returnData->statusCode);
+        $returnData = MasterService::getItemsList($request, $client);
+        return ResponseService::jsonResponse($returnData->jsonContent, $returnData->statusCode);
     }
 
     /**
@@ -32,16 +35,17 @@ class MasterController extends Controller
     {
         $masterData = MasterService::createDataFromRequest($request);
         $master = Master::create($masterData);
-        return ResponseService::jsonResponse($master,201);
+        return ResponseService::jsonResponse($master, 201);
     }
 
     /**
      * Display the specified resource.
      *
+     * @param MasterGetRequest $request
      * @param \App\Models\Swagger\v1\Master $master
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Master $master): \Illuminate\Http\JsonResponse
+    public function show(MasterGetRequest $request, Client $client, Master $master): \Illuminate\Http\JsonResponse
     {
         $masterData = MasterService::getItem($master);
         return ResponseService::jsonResponse($masterData->jsonContent, $masterData->statusCode);
@@ -76,7 +80,7 @@ class MasterController extends Controller
      * @param \App\Models\Swagger\v1\Master $master
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Master $master)
+    public function destroy(MasterDeleteRequest $request, Master $master)
     {
         return ResponseService::jsonResponse($master->delete(), 204);
     }

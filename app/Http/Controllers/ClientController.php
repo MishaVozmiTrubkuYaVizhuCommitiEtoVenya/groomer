@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Client\ClientDeleteRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientGetListRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientGetRequest;
 use App\Http\Requests\Swagger\v1\Client\ClientPatchRequest;
@@ -59,10 +60,11 @@ class ClientController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param ClientGetRequest $request
      * @param Client $client
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Client $client): \Illuminate\Http\JsonResponse
+    public function show(ClientGetRequest $request, Client $client): \Illuminate\Http\JsonResponse
     {
         return ResponseService::jsonResponse($client, 200);
     }
@@ -93,10 +95,12 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param ClientDeleteRequest $request
      * @param Client $client
      * @return Response
+     * @throws \Exception
      */
-    public function destroy(Client $client): Response
+    public function destroy(ClientDeleteRequest $request, Client $client): Response
     {
         $client->delete();
         return  ResponseService::noContent();

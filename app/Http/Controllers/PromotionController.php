@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Promotion\PromotionDeleteRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionGetRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPatchRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPostRequest;
@@ -42,7 +43,7 @@ class PromotionController extends Controller
      * @param Promotion $promotion
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Promotion $promotion): \Illuminate\Http\JsonResponse
+    public function show(PromotionGetRequest $request, Promotion $promotion): \Illuminate\Http\JsonResponse
     {
         return ResponseService::jsonResponse($promotion, 200);
     }
@@ -66,7 +67,7 @@ class PromotionController extends Controller
      * @param Promotion $promotion
      * @return Response
      */
-    public function destroy(Promotion $promotion): Response
+    public function destroy(PromotionDeleteRequest $request, Promotion $promotion): Response
     {
         PromotionService::deleteItem($promotion);
         return ResponseService::noContent();

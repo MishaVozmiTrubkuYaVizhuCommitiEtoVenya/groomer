@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Service\ServiceDeleteRequest;
 use App\Http\Requests\Swagger\v1\Service\ServiceGetRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePatchRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePostRequest;
@@ -58,7 +59,7 @@ class ServiceController extends Controller
      * @param \App\Models\Swagger\v1\Service $service
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Service $service)
+    public function show(ServiceGetRequest $request, Service $service)
     {
         return ResponseService::jsonResponse($service, 200);
     }
@@ -91,7 +92,7 @@ class ServiceController extends Controller
      * @param \App\Models\Swagger\v1\Service $service
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Service $service)
+    public function destroy(ServiceDeleteRequest $request, Service $service)
     {
         return ResponseService::jsonResponse($service->delete(), 204);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Swagger\v1\Order\OrderDeleteRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderGetRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPatchRequest;
 use App\Http\Requests\Swagger\v1\Order\OrderPostRequest;
@@ -51,7 +52,7 @@ class OrderController extends Controller
      * @param Order $order
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Order $order): \Illuminate\Http\JsonResponse
+    public function show(OrderGetRequest $request, Order $order): \Illuminate\Http\JsonResponse
     {
         return ResponseService::jsonResponse($order, 200);
     }
@@ -84,10 +85,12 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param OrderDeleteRequest $request
      * @param Order $order
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function destroy(Order $order)
+    public function destroy(OrderDeleteRequest $request, Order $order)
     {
         return ResponseService::jsonResponse($order->delete(), 204);
     }
