@@ -13,7 +13,7 @@ class MasterPatchRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->guard('clients')->user();
+        return auth()->guard('masters')->user() || auth()->guard('clients')->user();
     }
 
     /**
