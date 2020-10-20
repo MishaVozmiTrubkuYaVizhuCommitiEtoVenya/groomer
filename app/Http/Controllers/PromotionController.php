@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\Promotion\PromotionDeleteRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionGetRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPatchRequest;
 use App\Http\Requests\Swagger\v1\Promotion\PromotionPostRequest;
+use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Promotion;
 use App\Services\PromotionService;
 use App\Services\ResponseService;
@@ -19,9 +20,9 @@ class PromotionController extends Controller
      * @param PromotionGetRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(PromotionGetRequest $request): \Illuminate\Http\JsonResponse
+    public function index(PromotionGetRequest $request, Client $client): \Illuminate\Http\JsonResponse
     {
-        $promotion = PromotionService::getItemsList($request);
+        $promotion = PromotionService::getItemsList($request, $client);
         return ResponseService::jsonResponse($promotion, 200);
     }
 
@@ -43,7 +44,7 @@ class PromotionController extends Controller
      * @param Promotion $promotion
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(PromotionGetRequest $request, Promotion $promotion): \Illuminate\Http\JsonResponse
+    public function show(PromotionGetRequest $request, Client $client, Promotion $promotion): \Illuminate\Http\JsonResponse
     {
         return ResponseService::jsonResponse($promotion, 200);
     }

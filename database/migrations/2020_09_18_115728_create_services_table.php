@@ -17,7 +17,7 @@ class CreateServicesTable extends Migration
             $table->id();
             $table->bigInteger('client_id')->unsigned();
             $table->string('image');
-            $table->unsignedTinyInteger('type');
+            $table->unsignedTinyInteger('service_type');
             $table->unsignedInteger('price');
             $table->string('name');
             $table->string('text');

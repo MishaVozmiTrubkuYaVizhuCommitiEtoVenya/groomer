@@ -6,12 +6,12 @@
       "name" : "Mike",
       "url" : "http://kosolapus.ddns.net/"
     },
-    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\nTODO:\n1. Обновить структуру описания в соответствии со структурой БД\n2. Подготовить возможность тестирования\n3. Добавить тест-кейсы для всего API\n\n### Changelog\n\n**v1.1.4**: Обновил структуру WorkingDiapason\n\n**v1.1.3**: Добавил описания возвращаемых кодов.\n\n**v1.1.2**: Удалил упоминания Питомцев и Пушей из АПИ\n\n**v1.1.1**: Добавил параметр \"платформа\" для заказа, заменил OneSignal на FCM + APNs\n\n**v1.1.0**: Убрал пуши из API\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
+    "description" : "API для будущей GroomCRM или назовите ее уже как-нибудь. На этой странице расписаны основные эндпоинты,\nпо которым можно получить данные из базы данных (или положить их туда, если будет такая возможность). Также здесь\nможно будет протестировать эти самые эндпоинты, посмотреть ответы и всякое такое.\n\nTODO:\n1. Обновить структуру описания в соответствии со структурой БД\n2. Подготовить возможность тестирования\n3. Добавить тест-кейсы для всего API\n\n### Changelog\n\n**v1.2.0**: Обновлены пути, респонсы, эндпоинты для приложений вынесены в отдельный стек\n\n**v1.1.4**: Обновил структуру WorkingDiapason\n\n**v1.1.3**: Добавил описания возвращаемых кодов.\n\n**v1.1.2**: Удалил упоминания Питомцев и Пушей из АПИ\n\n**v1.1.1**: Добавил параметр \"платформа\" для заказа, заменил OneSignal на FCM + APNs\n\n**v1.1.0**: Убрал пуши из API\n\n**v1.0.4**: добавлены фильтры по датам, добавлено поле телефона для мастеров (для смс-оповещений), добавлено поле\npush_device_id для отправки пушей на телефон.\n",
     "license" : {
       "name" : "MIT"
     },
     "title" : "Groomer Service",
-    "version" : "1.1.4"
+    "version" : "1.2.0"
   },
   "servers" : [ {
     "description" : "Домашний сервер (не всегда работает)",
@@ -21,22 +21,26 @@
     "url" : "http://188.225.82.78/api/v1"
   } ],
   "tags" : [ {
+    "description" : "Все доступные точки для приложения в одном месте\n",
+    "name" : "Application"
+  }, {
+    "description" : "Эндпоинты для аутентификации в админке\n",
     "name" : "OAuth"
   }, {
-    "description" : "Если что, тут речь не про клиентов грумеров,\nа про самих грумеров - клиенты этого приложения именно они.\nПриложение клиента может логиниться в сервисе двухфакторной аутентификации.\n",
+    "description" : "Управление Салонами\n",
     "name" : "Client"
   }, {
     "description" : "Управление мастерами - добавление, удаление, редактирование и все такое\n",
     "name" : "Master"
   }, {
-    "description" : "Отсюда управляются сами услуги - можно создать новые,\nполучить старые или обновить что-то из услуг.\n",
-    "name" : "Service"
-  }, {
-    "description" : "Возможно, правильнее было бы назвать это \"Booking\". Основной\nраздел для работы с расписанием мастеров\n",
+    "description" : "Основной раздел для создания и просмотра заказов\n",
     "name" : "Order"
   }, {
     "description" : "Управление акциями\n",
     "name" : "Promotion"
+  }, {
+    "description" : "Отсюда управляются сами услуги - можно создать новые,\nполучить старые или обновить что-то из услуг.\n",
+    "name" : "Service"
   }, {
     "description" : "Календари труженников когтеточки и ножниц\n",
     "name" : "WorkingDiapason"
@@ -75,13 +79,40 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -122,13 +153,40 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -193,26 +251,85 @@
           "required" : true
         },
         "responses" : {
-          "201" : {
-            "description" : "Сущность создана успешно"
-          },
+          "201" : { },
           "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -234,22 +351,100 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "404" : {
-            "description" : "Элемент не найден"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -260,52 +455,78 @@
         "tags" : [ "Client" ]
       },
       "get" : {
-        "description" : "",
+        "description" : "Получение данных для салона",
         "responses" : {
           "200" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Client"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/Client"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Ok"
           },
-          "422" : {
+          "404" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "404" : {
-            "description" : "Элемент не найден"
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Client" ]
+        "summary" : "Получение данных салона - адреса, телефоны, социалки и т.п.",
+        "tags" : [ "Client", "Application" ]
       },
       "parameters" : [ {
-        "description" : "Id requested Client",
-        "example" : 1,
+        "description" : "ID салона",
         "in" : "path",
         "name" : "client",
         "required" : true,
         "schema" : {
-          "minimum" : 1,
+          "default" : 1,
           "type" : "integer"
         }
       } ],
@@ -330,22 +551,100 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "404" : {
-            "description" : "Элемент не найден"
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -356,10 +655,19 @@
         "tags" : [ "Client" ]
       }
     },
-    "/master" : {
+    "/client/{client}/master" : {
       "get" : {
-        "description" : "Store *Master* entity",
+        "description" : "",
         "parameters" : [ {
+          "description" : "ID салона",
+          "in" : "path",
+          "name" : "client",
+          "required" : true,
+          "schema" : {
+            "default" : 1,
+            "type" : "integer"
+          }
+        }, {
           "description" : "Как много элементов должно возвращаться за один запрос",
           "in" : "query",
           "name" : "limit",
@@ -377,44 +685,86 @@
             "default" : 0,
             "type" : "integer"
           }
-        }, {
-          "description" : "Id клиента, которому принадлежит мастер",
-          "in" : "query",
-          "name" : "client_id",
-          "required" : true,
-          "schema" : {
-            "type" : "integer"
-          }
         } ],
         "responses" : {
           "200" : {
-            "description" : "Ok"
-          },
-          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "items" : {
+                          "$ref" : "#/components/schemas/Master"
+                        },
+                        "type" : "array"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+            "description" : "Ok"
           },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Master" ]
+        "summary" : "Получение списка мастеров конкретного салона",
+        "tags" : [ "Master", "Application" ]
       },
       "post" : {
         "description" : "",
+        "parameters" : [ {
+          "description" : "ID салона",
+          "in" : "path",
+          "name" : "client",
+          "required" : true,
+          "schema" : {
+            "default" : 1,
+            "type" : "integer"
+          }
+        } ],
         "requestBody" : {
           "content" : {
             "multipart/form-data" : {
@@ -454,7 +804,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Master"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/201"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/Master"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
@@ -464,19 +823,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -487,7 +907,7 @@
         "tags" : [ "Master" ]
       }
     },
-    "/master/{master}" : {
+    "/client/{client}/master/{master}" : {
       "delete" : {
         "description" : "",
         "responses" : {
@@ -498,19 +918,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -527,7 +1008,16 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Master"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/Master"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
@@ -537,33 +1027,101 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Master" ]
+        "summary" : "Получение информации по конкретному мастеру",
+        "tags" : [ "Master", "Application" ]
       },
       "parameters" : [ {
-        "description" : "Id requested Master",
-        "example" : 1,
+        "description" : "ID салона",
+        "in" : "path",
+        "name" : "client",
+        "required" : true,
+        "schema" : {
+          "default" : 1,
+          "type" : "integer"
+        }
+      }, {
+        "description" : "Id мастера",
         "in" : "path",
         "name" : "master",
         "required" : true,
         "schema" : {
-          "minimum" : 1,
           "type" : "integer"
         }
       } ],
@@ -588,19 +1146,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -611,272 +1230,35 @@
         "tags" : [ "Master" ]
       }
     },
-    "/order" : {
+    "/client/{client}/promotion" : {
       "get" : {
-        "description" : "Store *Order* entity",
+        "description" : "",
         "parameters" : [ {
-          "description" : "Как много элементов должно возвращаться за один запрос",
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 25,
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Смещение от первого",
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "type" : "integer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          },
-          "422" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
-                }
-              }
-            },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "5XX" : {
-            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
-        "summary" : "",
-        "tags" : [ "Order" ]
-      },
-      "post" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Order"
-              }
-            }
-          },
-          "description" : "Store *Order* entity",
-          "required" : true
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Ok"
-          },
-          "422" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
-                }
-              }
-            },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "5XX" : {
-            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
-          }
-        },
-        "summary" : "",
-        "tags" : [ "Order" ]
-      }
-    },
-    "/order/{order}" : {
-      "delete" : {
-        "description" : "",
-        "responses" : {
-          "204" : {
-            "description" : "Ok"
-          },
-          "422" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
-                }
-              }
-            },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "5XX" : {
-            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
-        "summary" : "",
-        "tags" : [ "Order" ]
-      },
-      "get" : {
-        "description" : "",
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Order"
-                }
-              }
-            },
-            "description" : "Ok"
-          },
-          "422" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
-                }
-              }
-            },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "5XX" : {
-            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
-        "summary" : "",
-        "tags" : [ "Order" ]
-      },
-      "parameters" : [ {
-        "description" : "Id requested Order",
-        "example" : 1,
-        "in" : "path",
-        "name" : "order",
-        "required" : true,
-        "schema" : {
-          "minimum" : 1,
-          "type" : "integer"
-        }
-      } ],
-      "patch" : {
-        "description" : "",
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/Order"
-              }
-            }
-          },
-          "description" : "Optional description in *Markdown*",
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Ok"
-          },
-          "422" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
-                }
-              }
-            },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
-          "5XX" : {
-            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
-          }
-        },
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
-        "summary" : "",
-        "tags" : [ "Order" ]
-      }
-    },
-    "/promotion" : {
-      "get" : {
-        "description" : "Store *Promotion* entity",
-        "parameters" : [ {
-          "description" : "Как много элементов должно возвращаться за один запрос",
-          "in" : "query",
-          "name" : "limit",
-          "required" : false,
-          "schema" : {
-            "default" : 25,
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Смещение от первого",
-          "in" : "query",
-          "name" : "offset",
-          "required" : false,
-          "schema" : {
-            "default" : 0,
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Id клиента, которому принадлежит мастер",
-          "in" : "query",
-          "name" : "client_id",
+          "description" : "ID салона",
+          "in" : "path",
+          "name" : "client",
           "required" : true,
           "schema" : {
+            "default" : 1,
             "type" : "integer"
           }
         }, {
-          "description" : "Начало периода",
+          "description" : "Как много элементов должно возвращаться за один запрос",
           "in" : "query",
-          "name" : "date_start",
+          "name" : "limit",
           "required" : false,
           "schema" : {
-            "format" : "datetime",
-            "type" : "string"
+            "default" : 25,
+            "type" : "integer"
           }
         }, {
-          "description" : "Конец периода",
+          "description" : "Смещение от первого",
           "in" : "query",
-          "name" : "date_end",
+          "name" : "offset",
           "required" : false,
           "schema" : {
-            "format" : "datetime",
-            "type" : "string"
+            "default" : 0,
+            "type" : "integer"
           }
         } ],
         "responses" : {
@@ -894,24 +1276,85 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Promotion" ]
+        "summary" : "Получение списка акций для салона",
+        "tags" : [ "Promotion", "Application" ]
       },
       "post" : {
         "description" : "",
@@ -934,19 +1377,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -957,7 +1461,7 @@
         "tags" : [ "Promotion" ]
       }
     },
-    "/promotion/{promotion}" : {
+    "/client/{client}/promotion/{promotion}" : {
       "delete" : {
         "description" : "",
         "responses" : {
@@ -968,19 +1472,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -997,36 +1562,75 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Promotion"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/Promotion"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Ok"
           },
-          "422" : {
+          "404" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Promotion" ]
+        "summary" : "Получение детальной информации по акции",
+        "tags" : [ "Promotion", "Application" ]
       },
       "parameters" : [ {
+        "description" : "ID салона",
+        "in" : "path",
+        "name" : "client",
+        "required" : true,
+        "schema" : {
+          "default" : 1,
+          "type" : "integer"
+        }
+      }, {
         "description" : "Id requested Promotion",
         "example" : 1,
         "in" : "path",
@@ -1058,19 +1662,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1081,10 +1746,19 @@
         "tags" : [ "Promotion" ]
       }
     },
-    "/service" : {
+    "/client/{client}/service" : {
       "get" : {
         "description" : "Store *Service* entity",
         "parameters" : [ {
+          "description" : "ID салона",
+          "in" : "path",
+          "name" : "client",
+          "required" : true,
+          "schema" : {
+            "default" : 1,
+            "type" : "integer"
+          }
+        }, {
           "description" : "Как много элементов должно возвращаться за один запрос",
           "in" : "query",
           "name" : "limit",
@@ -1102,41 +1776,61 @@
             "default" : 0,
             "type" : "integer"
           }
-        }, {
-          "description" : "Id клиента, которому принадлежит мастер",
-          "in" : "query",
-          "name" : "client_id",
-          "required" : true,
-          "schema" : {
-            "type" : "integer"
-          }
         } ],
         "responses" : {
           "200" : {
-            "description" : "Ok"
-          },
-          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "$ref" : "#/components/schemas/inline_response_200_1"
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+            "description" : "Ok"
           },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Service" ]
+        "summary" : "Получение списка Услуг, которые оказывает салон",
+        "tags" : [ "Service", "Application" ]
       },
       "post" : {
         "description" : "",
@@ -1182,19 +1876,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1205,7 +1960,7 @@
         "tags" : [ "Service" ]
       }
     },
-    "/service/{service}" : {
+    "/client/{client}/service/{service}" : {
       "delete" : {
         "description" : "",
         "responses" : {
@@ -1216,19 +1971,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1245,37 +2061,76 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Service"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/Service"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Ok"
           },
-          "422" : {
+          "404" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "Service" ]
+        "summary" : "Получение детальной информации услуги",
+        "tags" : [ "Service", "Application" ]
       },
       "parameters" : [ {
-        "description" : "Id requested Service",
+        "description" : "ID салона",
+        "in" : "path",
+        "name" : "client",
+        "required" : true,
+        "schema" : {
+          "default" : 1,
+          "type" : "integer"
+        }
+      }, {
+        "description" : "ID услуги",
         "example" : 1,
         "in" : "path",
         "name" : "service",
@@ -1306,19 +2161,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1329,10 +2245,27 @@
         "tags" : [ "Service" ]
       }
     },
-    "/working-diapason" : {
+    "/client/{client}/master/{master}/working-diapason" : {
       "get" : {
         "description" : "Store *WorkingDiapason* entity",
         "parameters" : [ {
+          "description" : "Id мастера",
+          "in" : "path",
+          "name" : "master",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          }
+        }, {
+          "description" : "ID салона",
+          "in" : "path",
+          "name" : "client",
+          "required" : true,
+          "schema" : {
+            "default" : 1,
+            "type" : "integer"
+          }
+        }, {
           "description" : "Как много элементов должно возвращаться за один запрос",
           "in" : "query",
           "name" : "limit",
@@ -1349,23 +2282,6 @@
           "schema" : {
             "default" : 0,
             "type" : "integer"
-          }
-        }, {
-          "description" : "Id мастера",
-          "in" : "query",
-          "name" : "master_id",
-          "required" : true,
-          "schema" : {
-            "type" : "integer"
-          }
-        }, {
-          "description" : "Если требуется только свободное время для записи",
-          "in" : "query",
-          "name" : "only_free",
-          "required" : false,
-          "schema" : {
-            "default" : false,
-            "type" : "boolean"
           }
         }, {
           "description" : "Начало периода",
@@ -1388,30 +2304,58 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "Ok"
-          },
-          "422" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "$ref" : "#/components/schemas/inline_response_200_2"
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+            "description" : "Ok"
           },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "WorkingDiapason" ]
+        "summary" : "Получение расписания мастера",
+        "tags" : [ "WorkingDiapason", "Application" ]
       },
       "post" : {
         "description" : "",
@@ -1434,19 +2378,40 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
-          },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1457,7 +2422,7 @@
         "tags" : [ "WorkingDiapason" ]
       }
     },
-    "/working-diapason/{working-diapason}" : {
+    "/client/{client}/master/{master}/working-diapason/{working-diapason}" : {
       "delete" : {
         "description" : "",
         "responses" : {
@@ -1468,19 +2433,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1497,36 +2523,83 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/WorkingDiapason"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/200"
+                  }, {
+                    "properties" : {
+                      "response" : {
+                        "$ref" : "#/components/schemas/WorkingDiapason"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Ok"
           },
-          "422" : {
+          "404" : {
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Сущность не найдена",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
-            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
-          },
-          "401" : {
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "description" : "Нет прав для выполнения данного действия"
+            "description" : "Сущность не найдена"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
-        "summary" : "",
-        "tags" : [ "WorkingDiapason" ]
+        "summary" : "Получение деталей временного отрезка",
+        "tags" : [ "WorkingDiapason", "Application" ]
       },
       "parameters" : [ {
+        "description" : "Id мастера",
+        "in" : "path",
+        "name" : "master",
+        "required" : true,
+        "schema" : {
+          "type" : "integer"
+        }
+      }, {
+        "description" : "ID салона",
+        "in" : "path",
+        "name" : "client",
+        "required" : true,
+        "schema" : {
+          "default" : 1,
+          "type" : "integer"
+        }
+      }, {
         "description" : "Id requested WorkingDiapason",
         "example" : 1,
         "in" : "path",
@@ -1558,19 +2631,80 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/inline_response_422"
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
                 }
               }
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
           "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Не передан токен"
           },
           "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Нет прав для выполнения данного действия"
           },
           "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
             "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
           }
         },
@@ -1579,6 +2713,531 @@
         } ],
         "summary" : "",
         "tags" : [ "WorkingDiapason" ]
+      }
+    },
+    "/client/{client}/order" : {
+      "get" : {
+        "description" : "Store *Order* entity",
+        "parameters" : [ {
+          "description" : "Как много элементов должно возвращаться за один запрос",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : 25,
+            "type" : "integer"
+          }
+        }, {
+          "description" : "Смещение от первого",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "post" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Store *Order* entity",
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
+          }
+        },
+        "summary" : "Создание заявки на оказание услуг",
+        "tags" : [ "Order", "Application" ]
+      }
+    },
+    "/client/{client}/order/{order}" : {
+      "delete" : {
+        "description" : "",
+        "responses" : {
+          "204" : {
+            "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "get" : {
+        "description" : "",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Order"
+                }
+              }
+            },
+            "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "",
+        "tags" : [ "Order" ]
+      },
+      "parameters" : [ {
+        "description" : "Id requested Order",
+        "example" : 1,
+        "in" : "path",
+        "name" : "order",
+        "required" : true,
+        "schema" : {
+          "minimum" : 1,
+          "type" : "integer"
+        }
+      } ],
+      "patch" : {
+        "description" : "",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Order"
+              }
+            }
+          },
+          "description" : "Optional description in *Markdown*",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Невозможно обработать запрос, произошла ошибка в процессе",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Не передан токен",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Не передан токен"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Нет прав для выполнения данного действия",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Нет прав для выполнения данного действия"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "allOf" : [ {
+                    "$ref" : "#/components/schemas/defaultResponse"
+                  }, {
+                    "description" : "Ошибка на сервере.",
+                    "properties" : {
+                      "message" : {
+                        "type" : "string"
+                      }
+                    },
+                    "type" : "object"
+                  } ]
+                }
+              }
+            },
+            "description" : "Ошибка на сервере. Не должно быть таких ответов, это плохой признак"
+          }
+        },
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "summary" : "",
+        "tags" : [ "Order" ]
       }
     }
   },
@@ -1596,51 +3255,6 @@
       }
     },
     "schemas" : {
-      "Service" : {
-        "properties" : {
-          "id" : {
-            "format" : "int64",
-            "readOnly" : true,
-            "type" : "integer"
-          },
-          "name" : {
-            "description" : "Название Услуги",
-            "type" : "string"
-          },
-          "image_upload" : {
-            "description" : "Загружаемое изображение услуги",
-            "format" : "binary",
-            "type" : "string",
-            "writeOnly" : true
-          },
-          "service_type" : {
-            "items" : {
-              "description" : "Тип услуги - для кошек, для собак, для других",
-              "enum" : [ 0, 1, 2 ],
-              "format" : "tinyint",
-              "type" : "integer"
-            },
-            "type" : "array"
-          },
-          "image" : {
-            "description" : "Изображение услуги",
-            "format" : "url",
-            "readOnly" : true,
-            "type" : "string"
-          },
-          "price" : {
-            "description" : "Цена на услугу",
-            "format" : "int64",
-            "type" : "integer"
-          },
-          "text" : {
-            "description" : "Описание услуги",
-            "type" : "string"
-          }
-        },
-        "required" : [ "image_upload", "name", "service_type" ],
-        "type" : "object"
-      },
       "Client" : {
         "description" : "Клиент - это пользователь приложения, частный грумер или контора.\nЭто определяется полем *type*, и влиять это может, к примеру,\nна ценник за работу сервиса + возможности по добавлению мастеров\n(для частника ограничение в 1 мастера).\nУ клиента может быть свое настраиваемое приложение, в котором кастомно могут указываться\nнекоторые настройки. Какие? А хрен его знает, народ упоролся и\nрассказывает про формы в админке, а не про типы данных.\nИ я хз, как форматировать поле *settings*, какой оно может быть длины и все такое.\nОднако, определенно у каждого клиента должно быть свое наименование (поле *name*) и какой-то логотип (поле *image*)\n(в крайнем случае, хотя бы просто фотка грумера)\n",
         "properties" : {
@@ -1680,37 +3294,36 @@
         },
         "type" : "object"
       },
-      "Promotion" : {
-        "description" : "TODO: Осмысленное описание объекта акций\n",
+      "Master" : {
+        "description" : "Мастер - это непосредственный исполнитель услуги.\nРазные мастера могут предоставлять одну или несколько услуг из общего списка Клиента\nУ мастера есть расписание.\n",
         "properties" : {
           "id" : {
-            "description" : "Уникальный идентификатор Акции",
             "format" : "int64",
             "readOnly" : true,
             "type" : "integer"
           },
-          "title" : {
-            "description" : "Заголовок Акции",
-            "type" : "string"
-          },
-          "full_description" : {
-            "description" : "Текст Акции, поддерживает разметку",
-            "type" : "string"
-          },
-          "image_url" : {
-            "description" : "Изображение акции",
+          "image" : {
             "format" : "url",
+            "readOnly" : true,
             "type" : "string"
           },
-          "date_start" : {
-            "description" : "Дата начала акции",
-            "format" : "timestamp",
-            "type" : "integer"
+          "image_upload" : {
+            "format" : "binary",
+            "type" : "string",
+            "writeOnly" : true
           },
-          "date_end" : {
-            "description" : "Дата окончания акции",
-            "format" : "timestamp",
-            "type" : "integer"
+          "name" : {
+            "nullable" : false,
+            "type" : "string"
+          },
+          "phone" : {
+            "nullable" : true,
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "description" : {
+            "nullable" : true,
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -1772,37 +3385,81 @@
         },
         "type" : "object"
       },
-      "Master" : {
-        "description" : "Мастер - это непосредственный исполнитель услуги.\nРазные мастера могут предоставлять одну или несколько услуг из общего списка Клиента\nУ мастера есть расписание.\n",
+      "Promotion" : {
+        "description" : "TODO: Осмысленное описание объекта акций\n",
+        "properties" : {
+          "id" : {
+            "description" : "Уникальный идентификатор Акции",
+            "format" : "int64",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "title" : {
+            "description" : "Заголовок Акции",
+            "type" : "string"
+          },
+          "full_description" : {
+            "description" : "Текст Акции, поддерживает разметку",
+            "type" : "string"
+          },
+          "image_url" : {
+            "description" : "Изображение акции",
+            "format" : "url",
+            "type" : "string"
+          },
+          "date_start" : {
+            "description" : "Дата начала акции",
+            "format" : "timestamp",
+            "type" : "integer"
+          },
+          "date_end" : {
+            "description" : "Дата окончания акции",
+            "format" : "timestamp",
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "Service" : {
         "properties" : {
           "id" : {
             "format" : "int64",
             "readOnly" : true,
             "type" : "integer"
           },
-          "image" : {
-            "format" : "url",
-            "readOnly" : true,
+          "name" : {
+            "description" : "Название Услуги",
             "type" : "string"
           },
           "image_upload" : {
+            "description" : "Загружаемое изображение услуги",
             "format" : "binary",
             "type" : "string",
             "writeOnly" : true
           },
-          "name" : {
-            "nullable" : false,
+          "service_type" : {
+            "description" : "Тип услуги - для кошек, для собак, для других",
+            "enum" : [ 0, 1, 2 ],
+            "format" : "tinyint",
+            "type" : "integer"
+          },
+          "image" : {
+            "description" : "Изображение услуги",
+            "format" : "url",
+            "readOnly" : true,
             "type" : "string"
           },
-          "phone" : {
-            "nullable" : true,
-            "type" : "string"
+          "price" : {
+            "description" : "Цена на услугу",
+            "format" : "int64",
+            "type" : "integer"
           },
-          "description" : {
-            "nullable" : true,
+          "text" : {
+            "description" : "Описание услуги",
             "type" : "string"
           }
         },
+        "required" : [ "image_upload", "name", "service_type" ],
         "type" : "object"
       },
       "WorkingDiapason" : {
@@ -1814,12 +3471,12 @@
             "type" : "integer"
           },
           "time_start" : {
-            "format" : "datetime",
-            "type" : "string"
+            "format" : "timestamp",
+            "type" : "integer"
           },
           "state" : {
-            "description" : "0 - свободно, 1 - занято",
-            "type" : "boolean"
+            "description" : "0 - свободно, 1 - забронировано, 2 - подтверждено",
+            "type" : "integer"
           }
         },
         "type" : "object"
@@ -1851,13 +3508,15 @@
         },
         "type" : "object"
       },
-      "inline_response_422" : {
-        "description" : "Сообщение об ошибке",
-        "properties" : {
-          "message" : {
-            "type" : "string"
-          }
-        },
+      "defaultResponse" : {
+        "type" : "object"
+      },
+      "200" : {
+        "description" : "Успешно получено",
+        "type" : "object"
+      },
+      "201" : {
+        "description" : "Сущность создана успешно",
         "type" : "object"
       },
       "inline_response_200" : {
@@ -1865,6 +3524,17 @@
           "response" : {
             "items" : {
               "$ref" : "#/components/schemas/Promotion"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_response_200_1" : {
+        "properties" : {
+          "response" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Service"
             },
             "type" : "array"
           }
@@ -1894,6 +3564,17 @@
           }
         },
         "required" : [ "image_upload", "name", "service_type" ],
+        "type" : "object"
+      },
+      "inline_response_200_2" : {
+        "properties" : {
+          "response" : {
+            "items" : {
+              "$ref" : "#/components/schemas/WorkingDiapason"
+            },
+            "type" : "array"
+          }
+        },
         "type" : "object"
       }
     },

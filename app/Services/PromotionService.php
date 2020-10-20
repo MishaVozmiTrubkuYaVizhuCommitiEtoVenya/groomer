@@ -4,28 +4,36 @@
 namespace App\Services;
 
 
+use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Promotion;
 use Illuminate\Http\Request;
 
 class PromotionService
 {
 
-    public static function getItemsList(Request $request)
+    public static function getItemsList(Request $request, Client $client)
     {
-        $requestParams = $request->only(['limit','offset','client_id', "date_start", "date_end"]);
+        $requestParams = $request->only(['limit','offset', "date_start", "date_end"]);
 
-        $itemQuery = Promotion::query();
+        $itemQuery = $client->promotions();
         $itemQuery->when(isset($requestParams['date_start']), function($q) use ($requestParams) {
             $q->where('date_start','>=', $requestParams['date_start']);
         });
+
         $itemQuery->when(isset($requestParams['date_end']), function($q) use ($requestParams) {
             $q->where('date_start','<=', $requestParams['date_end']);
         });
-        $itemQuery->where('client_id', $requestParams['client_id']);
+
+        //Если не указан диапазон дат, то забираем только текущие акции
+        if(!isset($requestParams['date_end']) && !isset($requestParams['date_start'])){
+            $now = date('Y:m:d H:i:s');
+            $itemQuery->where('date_end', '>', $now);
+            $itemQuery->where('date_start', '<', $now);
+        }
         $itemQuery->limit($requestParams['limit'] ?? 25);
         $itemQuery->skip($requestParams['offset'] ?? 0);
 
-        return $itemQuery->get();
+        return $itemQuery->get()->makeHidden(['client_id']);
     }
 
     public static function createItem(Request $request)

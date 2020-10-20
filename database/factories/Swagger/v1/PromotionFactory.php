@@ -40,7 +40,7 @@ class PromotionFactory extends Factory
             'title' => $this->faker->title,
             'client_id' => $this->faker->numberBetween(1,50),
             'full_description' => $this->faker->realText(),
-            'image_url' => $this->faker->imageUrl(),
+            'image_url' => "https://picsum.photos/512/512",
             'date_start' => $date_start,
             'date_end' => $date_end
         ];

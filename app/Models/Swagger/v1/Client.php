@@ -29,6 +29,10 @@ class Client extends Authenticatable
         'email_verified_at'
     ];
 
+    public function getSettingsAttribute($value){
+        return json_decode($value);
+    }
+
     public function masters(){
         return $this->hasMany('\App\Models\Swagger\v1\Master');
     }

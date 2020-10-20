@@ -93,7 +93,7 @@ class OrderService
         }
 
         OrderService::schedulePushNotification($data);
-        OrderService::notifyAdmin($data);
+        //OrderService::notifyAdmin($data);
         OrderService::notifyGroomer($data);
         OrderService::storeOrder($data);
 

@@ -25,10 +25,10 @@ class ServiceFactory extends Factory
         return [
             'name' => $this->faker->jobTitle,
             'client_id' => $this->faker->numberBetween(1,50),
-            'image' => $this->faker->imageUrl(),
+            'image' => "https://picsum.photos/512/512",
             'text' => $this->faker->realText(),
             'price' => $this->faker->randomFloat(2, 10, 3000),
-            'type' => $this->faker->randomElement([0,1,2]),
+            'service_type' => $this->faker->randomElement([0,1,2]),
         ];
     }
 }

@@ -125,125 +125,94 @@ Route::patch('/client/{client}', 'ClientController@update');
  * Summary:
  * Notes: Store *Master* entity
  */
-Route::get('/master', 'MasterController@index');
+Route::get('/client/{client}/master', 'MasterController@index');
 /**
  * post masterPost
  * Summary:
  * Notes:
  */
-Route::post('/master', 'MasterController@store');
+Route::post('/client/{client}/master', 'MasterController@store');
 /**
  * delete masterMasterDelete
  * Summary:
  * Notes:
  */
-Route::delete('/master/{master}', 'MasterController@destroy');
+Route::delete('/client/{client}/master/{master}', 'MasterController@destroy');
 /**
  * get masterMasterGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/master/{master}', 'MasterController@show');
+Route::get('/client/{client}/master/{master}', 'MasterController@show');
 /**
  * patch masterMasterPatch
  * Summary:
  * Notes:
  */
-Route::patch('/master/{master}', 'MasterController@update');
+Route::patch('/client/{client}/master/{master}', 'MasterController@update');
 /**
  * get orderGet
  * Summary:
  * Notes: Store *Order* entity
  */
-Route::get('/order', 'OrderController@index');
+Route::get('/client/{client}/order', 'OrderController@index');
 /**
  * post orderPost
  * Summary:
  * Notes:
  */
-Route::post('/order', 'OrderController@store');
+Route::post('/client/{client}/order', 'OrderController@store');
 /**
  * delete orderOrderDelete
  * Summary:
  * Notes:
  */
-Route::delete('/order/{order}', 'OrderController@destroy');
+Route::delete('/client/{client}/order/{order}', 'OrderController@destroy');
 /**
  * get orderOrderGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/order/{order}', 'OrderController@show');
+Route::get('/client/{client}/order/{order}', 'OrderController@show');
 /**
  * patch orderOrderPatch
  * Summary:
  * Notes:
  */
-Route::patch('/order/{order}', 'OrderController@update');
-/**
- * get petGet
- * Summary:
- * Notes: Store *Pet* entity
- */
-Route::get('/pet', 'PetController@index');
-/**
- * post petPost
- * Summary:
- * Notes:
- */
-Route::post('/pet', 'PetController@store');
-/**
- * delete petPetDelete
- * Summary:
- * Notes:
- */
-Route::delete('/pet/{pet}', 'PetController@destroy');
-/**
- * get petPetGet
- * Summary:
- * Notes:
- * Output-Formats: [application/json]
- */
-Route::get('/pet/{pet}', 'PetController@show');
-/**
- * patch petPetPatch
- * Summary:
- * Notes:
- */
-Route::patch('/pet/{pet}', 'PetController@update');
+Route::patch('/client/{client}/order/{order}', 'OrderController@update');
 /**
  * get promotionGet
  * Summary:
  * Notes: Store *Promotion* entity
  */
-Route::get('/promotion', 'PromotionController@index');
+Route::get('/client/{client}/promotion', 'PromotionController@index');
 /**
  * post promotionPost
  * Summary:
  * Notes:
  */
-Route::post('/promotion', 'PromotionController@store');
+Route::post('/client/{client}/promotion', 'PromotionController@store');
 /**
  * delete promotionPromotionDelete
  * Summary:
  * Notes:
  */
-Route::delete('/promotion/{promotion}', 'PromotionController@destroy');
+Route::delete('/client/{client}/promotion/{promotion}', 'PromotionController@destroy');
 /**
  * get promotionPromotionGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/promotion/{promotion}', 'PromotionController@show');
+Route::get('/client/{client}/promotion/{promotion}', 'PromotionController@show');
 /**
  * patch promotionPromotionPatch
  * Summary:
  * Notes:
  */
-Route::patch('/promotion/{promotion}', 'PromotionController@update');
+Route::patch('/client/{client}/promotion/{promotion}', 'PromotionController@update');
 /**
  * get pushGet
  * Summary:
@@ -280,63 +249,63 @@ Route::patch('/push/{push}', 'PushController@update');
  * Summary:
  * Notes: Store *Service* entity
  */
-Route::get('/service', 'ServiceController@index');
+Route::get('/client/{client}/service', 'ServiceController@index');
 /**
  * post servicePost
  * Summary:
  * Notes:
  */
-Route::post('/service', 'ServiceController@store');
+Route::post('/client/{client}/service', 'ServiceController@store');
 /**
  * delete serviceServiceDelete
  * Summary:
  * Notes:
  */
-Route::delete('/service/{service}', 'ServiceController@destroy');
+Route::delete('/client/{client}/service/{service}', 'ServiceController@destroy');
 /**
  * get serviceServiceGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/service/{service}', 'ServiceController@show');
+Route::get('/client/{client}/service/{service}', 'ServiceController@show');
 /**
  * patch serviceServicePatch
  * Summary:
  * Notes:
  */
-Route::patch('/service/{service}', 'ServiceController@update');
+Route::patch('/client/{client}/service/{service}', 'ServiceController@update');
 /**
  * get workingDiapasonGet
  * Summary:
  * Notes: Store *WorkingDiapason* entity
  */
-Route::get('/working-diapason', 'WorkingDiapasonController@index');
+Route::get('/client/{client}/master/{master}/working-diapason', 'WorkingDiapasonController@index');
 /**
  * post workingDiapasonPost
  * Summary:
  * Notes:
  */
-Route::post('/working-diapason', 'WorkingDiapasonController@store');
+Route::post('/client/{client}/master/{master}/working-diapason', 'WorkingDiapasonController@store');
 /**
  * delete workingDiapasonWorkingDiapasonDelete
  * Summary:
  * Notes:
  */
-Route::delete('/working-diapason/{working-diapason}', 'WorkingDiapasonController@destroy');
+Route::delete('/client/{client}/master/{master}/working-diapason/{diapason}', 'WorkingDiapasonController@destroy');
 /**
  * get workingDiapasonWorkingDiapasonGet
  * Summary:
  * Notes:
  * Output-Formats: [application/json]
  */
-Route::get('/working-diapason/{working-diapason}', 'WorkingDiapasonController@show');
+Route::get('/client/{client}/master/{master}/working-diapason/{diapason}', 'WorkingDiapasonController@show');
 /**
  * patch workingDiapasonWorkingDiapasonPatch
  * Summary:
  * Notes:
  */
-Route::patch('/working-diapason/{working-diapason}', 'WorkingDiapasonController@update');
+Route::patch('/client/{client}/master/{master}/working-diapason/{diapason}', 'WorkingDiapasonController@update');
 
 Route::middleware('auth:api')->get(
     '/user',

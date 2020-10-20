@@ -6,6 +6,8 @@ use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonDeleteRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonGetRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPatchRequest;
 use App\Http\Requests\Swagger\v1\WorkingDiapason\WorkingDiapasonPostRequest;
+use App\Models\Swagger\v1\Client;
+use App\Models\Swagger\v1\Master;
 use App\Models\Swagger\v1\WorkingDiapason;
 use App\Services\ResponseService;
 use App\Services\WorkingDiapasonService;
@@ -18,10 +20,10 @@ class WorkingDiapasonController extends Controller
      * @param WorkingDiapasonGetRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(WorkingDiapasonGetRequest $request)
+    public function index(WorkingDiapasonGetRequest $request, Client $client, Master $master)
     {
 
-        $returnData = WorkingDiapasonService::getList($request);
+        $returnData = WorkingDiapasonService::getList($request, $master);
 
         return ResponseService::jsonResponse($returnData, 200);
     }
@@ -51,24 +53,24 @@ class WorkingDiapasonController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
+     * @param \App\Models\Swagger\v1\WorkingDiapason $diapason
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkingDiapasonGetRequest $request, WorkingDiapason $workingDiapason)
+    public function show(WorkingDiapasonGetRequest $request, Client $client, Master $master, WorkingDiapason $diapason)
     {
-        return response($workingDiapason, 200);
+        return response($diapason->makeHidden(['master_id']), 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
+     * @param \App\Models\Swagger\v1\WorkingDiapason $diapason
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(WorkingDiapasonPatchRequest $request, WorkingDiapason $workingDiapason)
+    public function update(WorkingDiapasonPatchRequest $request, WorkingDiapason $diapason)
     {
-        $workingDiapason->update(
+        $diapason->update(
             $request->only(
                 [
                     "time_start",
@@ -78,17 +80,17 @@ class WorkingDiapasonController extends Controller
             )
         );
 
-        return ResponseService::jsonResponse($workingDiapason, 200);
+        return ResponseService::jsonResponse($diapason, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Swagger\v1\WorkingDiapason $workingDiapason
+     * @param \App\Models\Swagger\v1\WorkingDiapason $diapason
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(WorkingDiapasonDeleteRequest $request, WorkingDiapason $workingDiapason)
+    public function destroy(WorkingDiapasonDeleteRequest $request, WorkingDiapason $diapason)
     {
-        return ResponseService::jsonResponse($workingDiapason->delete(), 204);
+        return ResponseService::jsonResponse($diapason->delete(), 204);
     }
 }

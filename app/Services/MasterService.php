@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Master;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -32,19 +33,19 @@ class MasterService
 
     /**
      * @param Request $request
+     * @param \App\Models\Swagger\v1\Client $client
      * @return \stdClass
      */
-    public static function getItemsList(Request $request): \stdClass
+    public static function getItemsList(Request $request, Client $client): \stdClass
     {
-        $requestParams = $request->only(['limit', 'offset', 'client_id']);
+        $requestParams = $request->only(['limit', 'offset', 'client']);
         $returnData = new \stdClass();
         $returnData->statusCode = 422;
         $returnData->jsonContent = json_decode("{'message':'Error'}");
 
 
         if ($requestParams) {
-            $masterQuery = Master::query();
-            $masterQuery->where('client_id', $request->client_id);
+            $masterQuery = $client->masters();
             $masterQuery->limit($request->limit ?? 25);
             $masterQuery->skip($request->offset ?? 0);
 
@@ -53,7 +54,7 @@ class MasterService
                 $master->makeVisible(['email']);
             }
 
-            $returnData->jsonContent = $master->toJson();
+            $returnData->jsonContent = $master;
             $returnData->statusCode = 200;
         }
         return $returnData;
@@ -71,7 +72,7 @@ class MasterService
             $master->makeVisible(['email']);
         }
 
-        $returnData->jsonContent = $master->toJson();
+        $returnData->jsonContent = $master;
         $returnData->statusCode = 200;
         return $returnData;
     }

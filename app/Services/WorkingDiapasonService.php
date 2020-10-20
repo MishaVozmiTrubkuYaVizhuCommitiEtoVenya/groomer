@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Models\Swagger\v1\Master;
 use App\Models\Swagger\v1\WorkingDiapason;
 use Illuminate\Http\Request;
 
@@ -13,13 +14,12 @@ class WorkingDiapasonService
     const ORDERED_STATE = 2;
 
 
-    public static function getList(Request $request)
+    public static function getList(Request $request, Master $master)
     {
-        $requestParams = $request->only(['limit', 'offset', 'master_id', 'only_free', 'date_start', 'date_end']);
+        $requestParams = $request->only(['limit', 'offset', 'only_free', 'date_start', 'date_end']);
 
         if ($requestParams) {
-            $itemQuery = WorkingDiapason::query();
-            $itemQuery->where('master_id', $requestParams['master_id']);
+            $itemQuery = $master->workingDiapasons();
             if(auth()->user()){
                 $itemQuery->when(isset($requestParams['only_free']), function($q){
                     $q->where('state', WorkingDiapasonService::FREE_STATE);
@@ -39,7 +39,7 @@ class WorkingDiapasonService
 
             $itemQuery->limit(request()->limit ?? 25);
             $itemQuery->skip(request()->offset ?? 0);
-            $workingDiapason = $itemQuery->get();
+            $workingDiapason = $itemQuery->get()->makeHidden(['master_id']);
         } else {
             $workingDiapason = WorkingDiapason::limit(25)->get();
         }

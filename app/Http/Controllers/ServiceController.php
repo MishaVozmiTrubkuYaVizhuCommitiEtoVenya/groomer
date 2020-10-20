@@ -6,6 +6,7 @@ use App\Http\Requests\Swagger\v1\Service\ServiceDeleteRequest;
 use App\Http\Requests\Swagger\v1\Service\ServiceGetRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePatchRequest;
 use App\Http\Requests\Swagger\v1\Service\ServicePostRequest;
+use App\Models\Swagger\v1\Client;
 use App\Models\Swagger\v1\Service;
 use App\Services\ResponseService;
 
@@ -16,19 +17,14 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(ServiceGetRequest $request)
+    public function index(ServiceGetRequest $request, Client $client)
     {
-        $requestParams = $request->only(['limit','offset','client_id']);
+        $requestParams = $request->only(['limit','offset']);
 
-        if($requestParams){
-            $itemQuery = Service::query();
-            $itemQuery->where('client_id', request()->client_id);
-            $itemQuery->limit(request()->limit ?? 25);
-            $itemQuery->skip(request()->offset ?? 0);
-            $service = $itemQuery->get();
-        } else {
-            $service = Service::limit(25)->get();
-        }
+        $itemQuery = $client->services();
+        $itemQuery->limit(request()->limit ?? 25);
+        $itemQuery->skip(request()->offset ?? 0);
+        $service = $itemQuery->get()->makeHidden(['client_id']);
         return ResponseService::jsonResponse($service, 200);
     }
 
@@ -59,7 +55,7 @@ class ServiceController extends Controller
      * @param \App\Models\Swagger\v1\Service $service
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(ServiceGetRequest $request, Service $service)
+    public function show(ServiceGetRequest $request, Client $client, Service $service)
     {
         return ResponseService::jsonResponse($service, 200);
     }
