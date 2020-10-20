@@ -54,11 +54,11 @@ class WorkingDiapasonController extends Controller
      * Display the specified resource.
      *
      * @param \App\Models\Swagger\v1\WorkingDiapason $diapason
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(WorkingDiapasonGetRequest $request, Client $client, Master $master, WorkingDiapason $diapason)
     {
-        return response($diapason->makeHidden(['master_id']), 200);
+        return ResponseService::jsonResponse($diapason->makeHidden(['master_id']), 200);
     }
 
     /**
