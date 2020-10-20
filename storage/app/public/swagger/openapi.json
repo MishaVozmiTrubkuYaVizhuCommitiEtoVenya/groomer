@@ -2865,46 +2865,6 @@
             },
             "description" : "Невозможно обработать запрос, произошла ошибка в процессе"
           },
-          "401" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "allOf" : [ {
-                    "$ref" : "#/components/schemas/defaultResponse"
-                  }, {
-                    "description" : "Не передан токен",
-                    "properties" : {
-                      "message" : {
-                        "type" : "string"
-                      }
-                    },
-                    "type" : "object"
-                  } ]
-                }
-              }
-            },
-            "description" : "Не передан токен"
-          },
-          "403" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "allOf" : [ {
-                    "$ref" : "#/components/schemas/defaultResponse"
-                  }, {
-                    "description" : "Нет прав для выполнения данного действия",
-                    "properties" : {
-                      "message" : {
-                        "type" : "string"
-                      }
-                    },
-                    "type" : "object"
-                  } ]
-                }
-              }
-            },
-            "description" : "Нет прав для выполнения данного действия"
-          },
           "5XX" : {
             "content" : {
               "application/json" : {
